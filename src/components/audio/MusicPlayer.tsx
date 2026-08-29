@@ -13,14 +13,13 @@ import {
   Disc3,
   Minimize2,
   Maximize2,
-  Music,
 } from "lucide-react";
 
 export function MusicPlayer() {
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
-  const [isMinimized, setIsMinimized] = useState(true); // Start minimized by default so it doesn't block screen
+  const [isMinimized, setIsMinimized] = useState(true);
   const [progress, setProgress] = useState(0);
   const [duration, setDuration] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
@@ -28,7 +27,6 @@ export function MusicPlayer() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const currentSong: Song = PLAYLIST[currentTrackIndex];
 
-  // Initialize audio
   useEffect(() => {
     const audio = new Audio();
     audio.src = currentSong.src;
@@ -139,11 +137,11 @@ export function MusicPlayer() {
             sounds.playClick();
             setIsMinimized(false);
           }}
-          className="flex items-center gap-3 px-4 py-2.5 rounded-full bg-[#0a0a0c]/95 border border-neutral-800 text-white shadow-[0_10px_30px_rgba(0,0,0,0.9)] hover:border-cyan-500/50 hover:scale-105 active:scale-95 transition-all backdrop-blur-xl group"
+          className="flex items-center gap-3 px-4 py-2.5 rounded-full bg-[#0a0d16]/95 border border-white/[0.1] text-white shadow-[0_10px_30px_rgba(0,0,0,0.9)] hover:border-cyan-500/50 hover:scale-105 active:scale-95 transition-all backdrop-blur-xl group"
         >
           {/* Animated Vinyl Icon */}
           <div
-            className={`w-7 h-7 rounded-full bg-slate-900 border border-neutral-700 flex items-center justify-center relative overflow-hidden ${
+            className={`w-7 h-7 rounded-full bg-slate-900 border border-slate-700 flex items-center justify-center relative overflow-hidden ${
               isPlaying ? "animate-spin" : ""
             }`}
             style={{ animationDuration: "3.5s" }}
@@ -158,23 +156,23 @@ export function MusicPlayer() {
             </span>
             <div className="flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
-              <span className="text-[9px] font-mono text-neutral-400">
+              <span className="text-[9px] font-mono text-slate-400">
                 {isPlaying ? "PLAYING" : "PAUSED [M]"}
               </span>
             </div>
           </div>
 
-          <Maximize2 className="w-3.5 h-3.5 text-neutral-500 group-hover:text-white transition-colors ml-1" />
+          <Maximize2 className="w-3.5 h-3.5 text-slate-500 group-hover:text-white transition-colors ml-1" />
         </button>
       ) : (
         /* Expanded Obsidian Vinyl Audio Deck */
-        <div className="w-[310px] rounded-2xl bg-[#09090b]/95 border border-neutral-800/90 p-4 shadow-[0_20px_50px_rgba(0,0,0,0.95)] flex flex-col gap-3.5 backdrop-blur-2xl">
+        <div className="w-[310px] rounded-3xl bg-[#090b14]/95 border border-white/[0.1] p-4 shadow-[0_20px_50px_rgba(0,0,0,0.95)] flex flex-col gap-3.5 backdrop-blur-2xl">
           {/* Header Bar */}
-          <div className="flex items-center justify-between border-b border-neutral-800/80 pb-2.5">
+          <div className="flex items-center justify-between border-b border-white/[0.08] pb-2.5">
             <div className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
-              <span className="text-[10px] font-mono font-bold tracking-widest text-neutral-200">
-                AUDIO // VINYL_DECK
+              <span className="text-[10px] font-mono font-bold tracking-widest text-slate-200">
+                AUDIO // VINYL DECK
               </span>
             </div>
 
@@ -182,12 +180,12 @@ export function MusicPlayer() {
               <button
                 onClick={toggleMute}
                 title={isMuted ? "Unmute" : "Mute"}
-                className="p-1.5 rounded-lg hover:bg-neutral-800 text-neutral-400 hover:text-white transition-colors"
+                className="p-1.5 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition-colors"
               >
                 {isMuted ? (
                   <VolumeX className="w-3.5 h-3.5 text-rose-400" />
                 ) : (
-                  <Volume2 className="w-3.5 h-3.5 text-neutral-300" />
+                  <Volume2 className="w-3.5 h-3.5 text-slate-300" />
                 )}
               </button>
 
@@ -197,7 +195,7 @@ export function MusicPlayer() {
                   setIsMinimized(true);
                 }}
                 title="Minimize player"
-                className="p-1.5 rounded-lg hover:bg-neutral-800 text-neutral-400 hover:text-white transition-colors"
+                className="p-1.5 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition-colors"
               >
                 <Minimize2 className="w-3.5 h-3.5" />
               </button>
@@ -208,15 +206,14 @@ export function MusicPlayer() {
           <div className="flex items-center gap-3.5">
             {/* Spinning Vinyl Record Disc */}
             <div
-              className={`w-14 h-14 rounded-full bg-neutral-900 border-2 border-neutral-700 flex items-center justify-center shrink-0 shadow-lg relative overflow-hidden cursor-pointer ${
+              className={`w-14 h-14 rounded-full bg-black border-2 border-slate-700 flex items-center justify-center shrink-0 shadow-lg relative overflow-hidden cursor-pointer ${
                 isPlaying ? "animate-spin" : ""
               }`}
               style={{ animationDuration: "4s" }}
               onClick={togglePlay}
             >
-              {/* Vinyl Grooves */}
-              <div className="absolute inset-1 rounded-full border border-neutral-800" />
-              <div className="absolute inset-2.5 rounded-full border border-neutral-800" />
+              <div className="absolute inset-1 rounded-full border border-slate-800" />
+              <div className="absolute inset-2.5 rounded-full border border-slate-800" />
               <div className="w-4 h-4 rounded-full bg-cyan-400 flex items-center justify-center shadow-inner">
                 <div className="w-1 h-1 rounded-full bg-black" />
               </div>
@@ -230,7 +227,7 @@ export function MusicPlayer() {
               <h4 className="text-xs font-mono font-bold text-white truncate">
                 {currentSong.title}
               </h4>
-              <p className="text-[10px] font-mono text-neutral-400 truncate mt-0.5">
+              <p className="text-[10px] font-mono text-slate-400 truncate mt-0.5">
                 {currentSong.artist}
               </p>
             </div>
@@ -258,9 +255,9 @@ export function MusicPlayer() {
               max="100"
               value={progress || 0}
               onChange={handleSeek}
-              className="w-full h-1 bg-neutral-800 rounded-lg appearance-none cursor-pointer accent-cyan-400"
+              className="w-full h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-cyan-400"
             />
-            <div className="flex justify-between text-[9px] font-mono text-neutral-500">
+            <div className="flex justify-between text-[9px] font-mono text-slate-400">
               <span>{formatTime(currentTime)}</span>
               <span>{formatTime(duration)}</span>
             </div>
@@ -268,14 +265,14 @@ export function MusicPlayer() {
 
           {/* Player Action Buttons */}
           <div className="flex items-center justify-between pt-1">
-            <span className="text-[9px] font-mono text-neutral-600">
-              [M] TOGGLE
+            <span className="text-[9px] font-mono text-slate-500">
+              [M] SHORTCUT
             </span>
 
             <div className="flex items-center gap-2">
               <button
                 onClick={handlePrevTrack}
-                className="p-1.5 rounded-lg bg-neutral-900 hover:bg-neutral-800 text-neutral-400 hover:text-white transition-colors"
+                className="p-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white transition-colors"
                 title="Previous Track"
               >
                 <SkipBack className="w-3.5 h-3.5" />
@@ -283,7 +280,7 @@ export function MusicPlayer() {
 
               <button
                 onClick={togglePlay}
-                className="p-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 transition-all hover:scale-105 active:scale-95 shadow-[0_0_12px_rgba(0,242,254,0.3)]"
+                className="p-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 transition-all hover:scale-105 active:scale-95 shadow-[0_0_12px_rgba(6,182,212,0.3)]"
                 title={isPlaying ? "Pause" : "Play"}
               >
                 {isPlaying ? (
@@ -295,7 +292,7 @@ export function MusicPlayer() {
 
               <button
                 onClick={handleNextTrack}
-                className="p-1.5 rounded-lg bg-neutral-900 hover:bg-neutral-800 text-neutral-400 hover:text-white transition-colors"
+                className="p-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white transition-colors"
                 title="Next Track"
               >
                 <SkipForward className="w-3.5 h-3.5" />

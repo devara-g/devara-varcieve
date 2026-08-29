@@ -3,7 +3,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { BIODATA } from "@/data/biodata";
 import { sounds } from "@/lib/soundEffects";
-import { Terminal as TerminalIcon, CornerDownLeft, Bot, Sparkles, Loader2 } from "lucide-react";
+import { Terminal as TerminalIcon, CornerDownLeft, Sparkles, Loader2, Copy, Check } from "lucide-react";
 
 interface ChatMessage {
   role: "system" | "user" | "assistant";
@@ -22,7 +22,6 @@ export function InteractiveCLI() {
   const [input, setInput] = useState("");
   const [history, setHistory] = useState<string[]>([]);
   const [historyIdx, setHistoryIdx] = useState<number>(-1);
-  const [isAiSession, setIsAiSession] = useState(false);
   const [isAiLoading, setIsAiLoading] = useState(false);
   const [aiChatHistory, setAiChatHistory] = useState<ChatMessage[]>([]);
 
@@ -32,9 +31,9 @@ export function InteractiveCLI() {
       command: "devara --version",
       output: (
         <div className="text-slate-200">
-          <span className="text-emerald-400 font-bold">DEVARA_CLI</span> v2.0.4-PROD [Architecture: Backend-x86_64]
+          <span className="text-emerald-400 font-bold">DEVARA_ENGINE_CLI</span> v2.4.0 [Arsitektur: Terdistribusi x86_64]
           <br />
-          Type <span className="text-cyan-400 font-bold">&quot;help&quot;</span> or launch Groq AI with <span className="text-purple-400 font-bold">&quot;sudo ai&quot;</span>.
+          Ketik <span className="text-cyan-400 font-bold">&quot;help&quot;</span> untuk melihat daftar perintah atau <span className="text-violet-400 font-bold">&quot;ai &lt;pertanyaan&gt;&quot;</span> untuk berdiskusi dengan asisten AI teknis.
         </div>
       ),
     },
@@ -52,7 +51,7 @@ export function InteractiveCLI() {
   // Call Live Groq API
   const sendGroqAiMessage = async (userPrompt: string) => {
     setIsAiLoading(true);
-    sounds.playHover();
+    sounds.playClick();
 
     const newHistory: ChatMessage[] = [
       ...aiChatHistory,
@@ -65,13 +64,13 @@ export function InteractiveCLI() {
       ...prev,
       {
         id: tempLogId,
-        command: userPrompt,
+        command: `ai ${userPrompt}`,
         isAiMode: true,
         isLoading: true,
         output: (
-          <div className="flex items-center gap-2 text-purple-300 text-xs font-mono py-1">
-            <Loader2 className="w-3.5 h-3.5 animate-spin text-purple-400" />
-            <span>[DEVARA_AI // Querying Groq Cloud Llama-3.3-70B...]</span>
+          <div className="flex items-center gap-2 text-violet-300 text-xs font-mono py-1">
+            <Loader2 className="w-3.5 h-3.5 animate-spin text-violet-400" />
+            <span>[DEVARA_AI // Memproses pertanyaan teknis via Groq Cloud...]</span>
           </div>
         ),
       },
@@ -85,7 +84,7 @@ export function InteractiveCLI() {
       });
 
       const data = await res.json();
-      const aiReply = data.reply || data.error || "No response received.";
+      const aiReply = data.reply || data.error || "Tidak ada respon yang diterima.";
 
       setAiChatHistory((prev) => [
         ...prev,
@@ -101,14 +100,14 @@ export function InteractiveCLI() {
               ...log,
               isLoading: false,
               output: (
-                <div className="space-y-1.5 text-xs text-slate-200 leading-relaxed font-mono">
-                  <div className="text-purple-400 font-bold flex items-center gap-1.5">
-                    <Bot className="w-3.5 h-3.5" />
-                    <span>DEVARA_AI [Groq {data.model || "Llama-3.1"}]:</span>
+                <div className="text-slate-200 text-xs font-mono leading-relaxed py-1 space-y-1">
+                  <div className="flex items-center gap-1.5 text-violet-400 font-bold">
+                    <Sparkles className="w-3.5 h-3.5" />
+                    <span>DEVARA_AI:</span>
                   </div>
-                  <div className="whitespace-pre-wrap pl-2 border-l border-purple-500/40 text-slate-200">
+                  <p className="whitespace-pre-wrap pl-4 border-l-2 border-violet-500/40 text-slate-300">
                     {aiReply}
-                  </div>
+                  </p>
                 </div>
               ),
             };
@@ -116,7 +115,7 @@ export function InteractiveCLI() {
           return log;
         })
       );
-    } catch (err: any) {
+    } catch {
       setLogs((prev) =>
         prev.map((log) => {
           if (log.id === tempLogId) {
@@ -124,8 +123,8 @@ export function InteractiveCLI() {
               ...log,
               isLoading: false,
               output: (
-                <div className="text-rose-400 text-xs font-mono">
-                  [GROQ_CONNECTION_ERROR]: {err.message || "Failed to reach AI server."}
+                <div className="text-rose-400 text-xs font-mono py-1">
+                  [NETWORK_ERROR] Gagal terhubung ke layanan AI.
                 </div>
               ),
             };
@@ -138,74 +137,34 @@ export function InteractiveCLI() {
     }
   };
 
-  const handleCommand = (cmd: string) => {
-    const trimmed = cmd.trim();
-    if (!trimmed || isAiLoading) return;
+  const handleCommand = (rawCmd: string) => {
+    const trimmed = rawCmd.trim();
+    if (!trimmed) return;
 
     sounds.playClick();
     setHistory((prev) => [...prev, trimmed]);
     setHistoryIdx(-1);
 
-    // If currently in AI Mode
-    if (isAiSession) {
-      if (trimmed.toLowerCase() === "exit" || trimmed.toLowerCase() === "quit") {
-        setIsAiSession(false);
-        setLogs((prev) => [
-          ...prev,
-          {
-            id: Math.random().toString(),
-            command: trimmed,
-            isAiMode: true,
-            output: <div className="text-rose-400 font-mono text-xs">[GROQ_AI SESSION TERMINATED // RETURNED TO BASH SHELL]</div>,
-          },
-        ]);
-        setInput("");
-        return;
-      }
+    const parts = trimmed.split(" ");
+    const cmd = parts[0].toLowerCase();
+    const args = parts.slice(1).join(" ");
 
-      if (trimmed.toLowerCase() === "clear") {
-        setLogs([]);
-        setInput("");
-        return;
-      }
-
-      // Send to Groq API
+    if (cmd === "clear" || cmd === "cls") {
+      setLogs([]);
       setInput("");
-      sendGroqAiMessage(trimmed);
       return;
     }
 
-    const parts = trimmed.split(" ");
-    const main = parts[0].toLowerCase();
-    const args = parts.slice(1).join(" ");
-
-    // Check for "sudo ai" or "ai"
-    if (main === "sudo" && parts[1]?.toLowerCase() === "ai") {
-      setIsAiSession(true);
-      const aiQuery = parts.slice(2).join(" ");
-      if (aiQuery) {
-        setInput("");
-        sendGroqAiMessage(aiQuery);
-        return;
-      } else {
+    if (cmd === "ai") {
+      if (!args) {
         setLogs((prev) => [
           ...prev,
           {
             id: Math.random().toString(),
             command: trimmed,
-            isAiMode: true,
             output: (
-              <div className="p-3 rounded-xl bg-purple-950/40 border border-purple-500/30 text-purple-200 space-y-2">
-                <div className="flex items-center gap-2 font-bold text-white">
-                  <Bot className="w-4 h-4 text-purple-400" />
-                  <span>[GROQ CLOUD AI NEURAL AGENT ONLINE]</span>
-                </div>
-                <p className="text-xs text-slate-200">
-                  Sesi AI interaktif aktif ditenagai oleh <strong>Groq Cloud API (Llama-3.3-70B)</strong>. Tanyakan apa saja mengenai backend Devara, arsitektur sistem, atau kolaborasi!
-                </p>
-                <div className="text-[11px] font-mono text-purple-300">
-                  💡 Ketik pertanyaan Anda atau ketik <span className="text-rose-400 font-bold">&quot;exit&quot;</span> untuk kembali ke bash.
-                </div>
+              <div className="text-amber-300 text-xs font-mono">
+                Penggunaan: <span className="text-white font-bold">ai &lt;pertanyaan&gt;</span> (contoh: &quot;ai Bagaimana pengalaman Devara dalam optimasi PostgreSQL?&quot;)
               </div>
             ),
           },
@@ -213,155 +172,139 @@ export function InteractiveCLI() {
         setInput("");
         return;
       }
-    } else if (main === "ai") {
-      setIsAiSession(true);
-      if (args) {
-        setInput("");
-        sendGroqAiMessage(args);
-        return;
-      } else {
-        setLogs((prev) => [
-          ...prev,
-          {
-            id: Math.random().toString(),
-            command: trimmed,
-            isAiMode: true,
-            output: (
-              <div className="p-3 rounded-xl bg-purple-950/40 border border-purple-500/30 text-purple-200 space-y-1 text-xs">
-                <div className="font-bold text-white flex items-center gap-1.5">
-                  <Bot className="w-4 h-4 text-purple-400" />
-                  <span>[GROQ AI ONLINE]</span>
-                </div>
-                <p className="text-slate-200">
-                  Silakan tanyakan pertanyaan Anda ke Groq AI Assistant Devara.
-                </p>
-              </div>
-            ),
-          },
-        ]);
-        setInput("");
-        return;
-      }
+      sendGroqAiMessage(args);
+      setInput("");
+      return;
     }
 
     let outputNode: React.ReactNode = null;
 
-    switch (main) {
+    switch (cmd) {
       case "help":
         outputNode = (
-          <div className="space-y-1 text-slate-300">
-            <div className="text-cyan-400 font-bold">AVAILABLE SYSTEM COMMANDS:</div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 text-[11.5px]">
-              <div><span className="text-purple-400 font-bold">sudo ai</span> — Groq AI Assistant (Llama-3.3)</div>
-              <div><span className="text-emerald-400 font-bold">bio</span> — Developer executive overview</div>
-              <div><span className="text-emerald-400 font-bold">skills</span> — Tech stack & proficiencies</div>
-              <div><span className="text-emerald-400 font-bold">projects</span> — Deployed systems list</div>
-              <div><span className="text-emerald-400 font-bold">telemetry</span> — System performance metrics</div>
-              <div><span className="text-emerald-400 font-bold">contact</span> — Uplink transmission channels</div>
-              <div><span className="text-emerald-400 font-bold">sudo hire</span> — Recruiter uplink</div>
-              <div><span className="text-emerald-400 font-bold">clear</span> — Wipe terminal logs</div>
+          <div className="text-xs font-mono space-y-1 text-slate-300">
+            <div className="text-cyan-400 font-bold">DAFTAR PERINTAH DEVTOOLS:</div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 pt-1">
+              <div><span className="text-emerald-400 font-bold">arch</span> — Lihat topologi arsitektur sistem</div>
+              <div><span className="text-emerald-400 font-bold">bench</span> — Lihat benchmark latensi & throughput</div>
+              <div><span className="text-emerald-400 font-bold">projects</span> — Daftar studi kasus sistem produksi</div>
+              <div><span className="text-emerald-400 font-bold">skills</span> — Inspeksi keahlian teknologi</div>
+              <div><span className="text-emerald-400 font-bold">stats</span> — Telemetri & kesehatan server</div>
+              <div><span className="text-emerald-400 font-bold">contact</span> — Saluran kontak langsung</div>
+              <div><span className="text-violet-400 font-bold">ai &lt;tanya&gt;</span> — Tanya asisten AI teknis Devara</div>
+              <div><span className="text-slate-400 font-bold">clear</span> — Bersihkan layar terminal</div>
             </div>
           </div>
         );
         break;
 
-      case "bio":
+      case "arch":
         outputNode = (
-          <div className="text-slate-200 leading-relaxed text-xs">
-            <span className="text-cyan-400 font-bold">{BIODATA.name}</span> — {BIODATA.role}
-            <br />
-            {BIODATA.bio}
+          <div className="text-xs font-mono text-slate-300 space-y-1.5 leading-relaxed">
+            <div className="text-cyan-400 font-bold">TOPOLOGI SISTEM TERDISTRIBUSI:</div>
+            <div className="p-3 rounded-xl bg-black/50 border border-white/[0.08] text-slate-300 font-mono text-[11px] whitespace-pre">
+{`[Client / Trafik Pengguna] 
+       │ (Protokol HTTPS / TLS 1.3)
+       ▼
+[Edge CDN / Cloudflare] ──► [Envoy / NGINX Ingress Gateway]
+                                  │ (JWT Auth & Rate Limiter < 5ms)
+                                  ▼
+                     [Node.js / Laravel Microservices]
+                        │                    │
+          (Cache-Aside) ▼                    ▼ (Write Master / ACID)
+               [Redis Cluster]      [PostgreSQL Primary]
+                    │                        │
+         (PubSub / Async Queue)              ▼ (Replikasi Streaming)
+               [BullMQ]             [Replika Baca Cluster]`}
+            </div>
           </div>
         );
         break;
 
-      case "skills":
+      case "bench":
         outputNode = (
-          <div className="space-y-1 text-xs">
-            <div className="text-cyan-400 font-bold">LOADED MODULES:</div>
-            {BIODATA.skills.map((s) => (
-              <div key={s.name} className="flex justify-between text-slate-300">
-                <span>{s.name} ({s.category})</span>
-                <span className="text-emerald-400 font-bold">{s.proficiency}% [{s.level}]</span>
+          <div className="text-xs font-mono text-slate-300 space-y-1.5">
+            <div className="text-cyan-400 font-bold">TELEMETRI BENCHMARK PRODUKSI:</div>
+            <div className="grid grid-cols-2 gap-2 text-[11px]">
+              <div className="p-2 rounded bg-black/40 border border-white/[0.06]">
+                <span className="text-slate-500 block">Latensi P99:</span>
+                <span className="text-emerald-400 font-bold">&lt; 16ms</span>
               </div>
-            ))}
+              <div className="p-2 rounded bg-black/40 border border-white/[0.06]">
+                <span className="text-slate-500 block">Throughput:</span>
+                <span className="text-cyan-300 font-bold">5.000+ RPS</span>
+              </div>
+              <div className="p-2 rounded bg-black/40 border border-white/[0.06]">
+                <span className="text-slate-500 block">Rasio Cache Hit:</span>
+                <span className="text-yellow-400 font-bold">94.8%</span>
+              </div>
+              <div className="p-2 rounded bg-black/40 border border-white/[0.06]">
+                <span className="text-slate-500 block">SLA Uptime:</span>
+                <span className="text-emerald-400 font-bold">99.98%</span>
+              </div>
+            </div>
           </div>
         );
         break;
 
       case "projects":
         outputNode = (
-          <div className="space-y-1 text-xs">
-            <div className="text-cyan-400 font-bold">PRODUCTION CODEBASES:</div>
-            {BIODATA.projects.map((p) => (
-              <div key={p.id} className="text-slate-300">
-                <span className="text-white font-bold">{p.title}</span> — {p.description}
+          <div className="text-xs font-mono text-slate-300 space-y-2">
+            <div className="text-cyan-400 font-bold">SISTEM PRODUKSI UNGGULAN:</div>
+            {BIODATA.projects.map((p, idx) => (
+              <div key={p.id} className="pl-3 border-l-2 border-cyan-500/40">
+                <div className="font-bold text-white">0{idx + 1}. {p.title}</div>
+                <div className="text-[11px] text-slate-400">{p.summary}</div>
+                <div className="text-[10px] text-cyan-300 mt-0.5">Metrik: {p.metrics.latency} // {p.metrics.efficiency}</div>
               </div>
             ))}
           </div>
         );
         break;
 
-      case "telemetry":
+      case "skills":
         outputNode = (
-          <div className="space-y-1 text-xs text-slate-300">
-            <div>API Latency: <span className="text-cyan-400 font-bold">{BIODATA.telemetry.apiLatency}</span></div>
-            <div>System Uptime: <span className="text-emerald-400 font-bold">{BIODATA.telemetry.uptime}</span></div>
-            <div>Cache Hit Rate: <span className="text-purple-400 font-bold">{BIODATA.telemetry.cacheHitRate}</span></div>
-            <div>Codebase Volume: <span className="text-amber-400 font-bold">{BIODATA.telemetry.linesOfCode}</span></div>
+          <div className="text-xs font-mono text-slate-300 space-y-1.5">
+            <div className="text-cyan-400 font-bold">ARSENAL KEAHLIAN TEKNOLOGI:</div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 text-[11px]">
+              {BIODATA.skills.map((s) => (
+                <div key={s.name} className="flex justify-between pr-4">
+                  <span className="text-slate-300">{s.name}</span>
+                  <span className="text-cyan-400 font-bold">{s.proficiency}%</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+        break;
+
+      case "stats":
+        outputNode = (
+          <div className="text-xs font-mono text-slate-300 space-y-1">
+            <div className="text-cyan-400 font-bold">STATUS OPERASIONAL CLUSTER:</div>
+            <div>Kesehatan: <span className="text-emerald-400 font-bold">{BIODATA.telemetry.systemHealth}</span></div>
+            <div>Latensi API: <span className="text-cyan-300 font-bold">{BIODATA.telemetry.apiLatency}</span></div>
+            <div>Pod Aktif: <span className="text-slate-200">{BIODATA.telemetry.dockerContainers}</span></div>
+            <div>Total Kode: <span className="text-amber-300">{BIODATA.telemetry.linesOfCode}</span></div>
           </div>
         );
         break;
 
       case "contact":
         outputNode = (
-          <div className="text-xs space-y-1 text-slate-300">
-            <div>EMAIL: <span className="text-cyan-400 font-bold">{BIODATA.email}</span></div>
-            <div>GITHUB: <span className="text-cyan-400 font-bold">{BIODATA.github}</span></div>
-            <div>LOCATION: <span className="text-slate-200">Indonesia</span></div>
+          <div className="text-xs font-mono text-slate-300 space-y-1">
+            <div className="text-cyan-400 font-bold">SALURAN KOMUNIKASI LANGSUNG:</div>
+            <div>Email: <a href={`mailto:${BIODATA.email}`} className="text-cyan-300 hover:underline">{BIODATA.email}</a></div>
+            <div>GitHub: <a href={BIODATA.github} target="_blank" rel="noopener noreferrer" className="text-cyan-300 hover:underline">{BIODATA.github}</a></div>
+            <div>LinkedIn: <a href={BIODATA.linkedin} target="_blank" rel="noopener noreferrer" className="text-cyan-300 hover:underline">{BIODATA.linkedin}</a></div>
           </div>
         );
         break;
 
-      case "sudo":
-        if (args.toLowerCase() === "hire") {
-          sounds.playConfirm();
-          outputNode = (
-            <div className="p-3 rounded-lg bg-emerald-950/40 border border-emerald-500/40 text-emerald-300 space-y-1 text-xs">
-              <div className="font-bold text-white flex items-center gap-1.5">
-                <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
-                [200 OK] AUTHORIZATION GRANTED:
-              </div>
-              <p className="text-slate-200">
-                Muhammad Devara siap bergabung untuk membangun backend infrastructure dan scalable full stack systems.
-              </p>
-              <div className="pt-1 text-xs">
-                Direct Email: <a href={`mailto:${BIODATA.email}`} className="underline font-bold text-cyan-400">{BIODATA.email}</a>
-              </div>
-            </div>
-          );
-        } else {
-          outputNode = <div className="text-rose-400">sudo: permission denied for command: {args}</div>;
-        }
-        break;
-
-      case "clear":
-        setLogs([]);
-        setInput("");
-        return;
-
-      case "whoami":
-        outputNode = <div className="text-cyan-300">guest@devara.sys [clearance: public_visitor]</div>;
-        break;
-
-      case "date":
-        outputNode = <div className="text-slate-400">{new Date().toUTCString()}</div>;
-        break;
-
       default:
         outputNode = (
-          <div className="text-rose-400 font-mono text-xs">
-            command not found: &quot;{trimmed}&quot;. Type <span className="text-cyan-400 font-bold">&quot;help&quot;</span> or <span className="text-purple-400 font-bold">&quot;sudo ai&quot;</span> for Groq AI Chat.
+          <div className="text-rose-400 text-xs font-mono">
+            zsh: perintah tidak ditemukan: {cmd}. Ketik <span className="text-cyan-400 font-bold">&quot;help&quot;</span> untuk melihat daftar perintah yang tersedia.
           </div>
         );
     }
@@ -371,7 +314,6 @@ export function InteractiveCLI() {
       {
         id: Math.random().toString(),
         command: trimmed,
-        isAiMode: false,
         output: outputNode,
       },
     ]);
@@ -380,147 +322,119 @@ export function InteractiveCLI() {
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      e.preventDefault();
       handleCommand(input);
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
       if (history.length > 0) {
-        const nextIdx = historyIdx === -1 ? history.length - 1 : Math.max(0, historyIdx - 1);
+        const nextIdx = historyIdx + 1 < history.length ? historyIdx + 1 : historyIdx;
         setHistoryIdx(nextIdx);
-        setInput(history[nextIdx]);
+        setInput(history[history.length - 1 - nextIdx] || "");
       }
     } else if (e.key === "ArrowDown") {
       e.preventDefault();
-      if (historyIdx !== -1) {
-        const nextIdx = historyIdx + 1;
-        if (nextIdx < history.length) {
-          setHistoryIdx(nextIdx);
-          setInput(history[nextIdx]);
-        } else {
-          setHistoryIdx(-1);
-          setInput("");
-        }
+      if (historyIdx > 0) {
+        const nextIdx = historyIdx - 1;
+        setHistoryIdx(nextIdx);
+        setInput(history[history.length - 1 - nextIdx] || "");
+      } else if (historyIdx === 0) {
+        setHistoryIdx(-1);
+        setInput("");
+      }
+    } else if (e.key === "Tab") {
+      e.preventDefault();
+      const available = ["help", "arch", "bench", "projects", "skills", "stats", "contact", "ai", "clear"];
+      const match = available.find((c) => c.startsWith(input.toLowerCase()));
+      if (match) {
+        setInput(match);
       }
     }
   };
 
   return (
-    <section id="terminal" className="py-24 relative z-10 border-t border-neutral-900 scroll-mt-16">
+    <section id="terminal" className="py-24 relative z-10 border-t border-white/[0.08] scroll-mt-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 border-b border-neutral-900 pb-4">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 border-b border-white/[0.08] pb-6">
           <div>
-            <div className="flex items-center gap-2 text-cyan-400 font-mono text-xs tracking-widest uppercase mb-1">
+            <div className="flex items-center gap-2 text-cyan-400 font-mono text-xs tracking-widest uppercase mb-2">
               <TerminalIcon className="w-4 h-4" />
-              <span>COMMAND_TERMINAL // 04</span>
+              <span>SHELL DEVTOOLS INTERAKTIF</span>
             </div>
-            <h2 className="text-2xl sm:text-3xl font-bold text-white font-mono tracking-tight">
-              INTERACTIVE_CLI & GROQ AI
+            <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight flex items-center gap-3">
+              <span>Terminal Engineering</span>
+              <span className="text-xs font-mono font-semibold px-2.5 py-0.5 rounded-full bg-violet-950 text-violet-300 border border-violet-500/30">
+                Konsol AI & CLI
+              </span>
             </h2>
           </div>
-          <p className="text-slate-400 text-xs sm:text-sm font-mono mt-2 md:mt-0 max-w-md">
-            Execute direct terminal directives or query the live Groq Cloud AI with &quot;sudo ai&quot;.
+          <p className="text-sm font-mono text-slate-400 max-w-md mt-3 md:mt-0">
+            Terminal interaktif dengan fitur autokomplit, diagnostik sistem, dan asisten AI Groq terintegrasi.
           </p>
         </div>
 
-        {/* macOS Terminal Window Frame */}
-        <div className="rounded-xl bg-[#0a0e17] border border-neutral-800 shadow-[0_20px_50px_rgba(0,0,0,0.9)] overflow-hidden">
-          {/* macOS Title Bar with Authentic Traffic Light Buttons */}
-          <div className="flex items-center justify-between px-4 py-3 bg-[#111827] border-b border-neutral-800/90 select-none">
+        {/* Terminal Window Box */}
+        <div
+          onClick={() => inputRef.current?.focus()}
+          className="w-full rounded-3xl bg-[#090b14] border border-white/[0.1] shadow-2xl overflow-hidden cursor-text"
+        >
+          {/* Header Bar */}
+          <div className="px-5 py-3.5 bg-[#0d101c] border-b border-white/[0.08] flex items-center justify-between">
             <div className="flex items-center gap-2">
-              {/* macOS Traffic Lights: Close, Minimize, Zoom */}
               <div className="flex items-center gap-2">
-                <span className="w-3 h-3 rounded-full bg-[#ff5f56] border border-[#e0443e]/50 hover:opacity-80 transition-opacity cursor-pointer shadow-sm" />
-                <span className="w-3 h-3 rounded-full bg-[#ffbd2e] border border-[#dea123]/50 hover:opacity-80 transition-opacity cursor-pointer shadow-sm" />
-                <span className="w-3 h-3 rounded-full bg-[#27c93f] border border-[#1aab29]/50 hover:opacity-80 transition-opacity cursor-pointer shadow-sm" />
+                <span className="w-3 h-3 rounded-full bg-rose-500/80" />
+                <span className="w-3 h-3 rounded-full bg-amber-500/80" />
+                <span className="w-3 h-3 rounded-full bg-emerald-500/80" />
               </div>
-              <span className="text-xs font-mono text-slate-400 ml-3 font-semibold flex items-center gap-1.5">
-                {isAiSession ? (
-                  <>
-                    <Bot className="w-3.5 h-3.5 text-purple-400 animate-pulse" />
-                    <span className="text-purple-300">devara-ai@groq-cloud:~# llama-3.3-70b</span>
-                  </>
-                ) : (
-                  <span>root@devara-sys:~# bash</span>
-                )}
+              <span className="text-xs font-mono text-slate-400 ml-3 font-semibold">
+                devara@jkt-edge-node: ~ (zsh)
               </span>
             </div>
-            <div className="flex items-center gap-2 text-[10px] font-mono text-slate-400">
-              <span>TRY:</span>
-              <button
-                onClick={() => handleCommand("sudo ai")}
-                className="px-2 py-0.5 rounded bg-purple-950/80 border border-purple-500/40 text-purple-300 hover:text-white font-bold transition-all hover:scale-105"
-              >
-                &quot;sudo ai&quot;
-              </button>
-              <span>or</span>
-              <button
-                onClick={() => handleCommand("help")}
-                className="px-2 py-0.5 rounded bg-slate-900 border border-slate-700 text-cyan-400 hover:text-white font-bold transition-all"
-              >
-                &quot;help&quot;
-              </button>
+
+            {/* Quick Action Hints */}
+            <div className="hidden sm:flex items-center gap-3 text-[11px] font-mono text-slate-500">
+              <span>[Tab] Autocomplete</span>
+              <span>[↑/↓] History</span>
+              <span>Ketik &quot;help&quot;</span>
             </div>
           </div>
 
           {/* Terminal Output Area */}
           <div
             ref={terminalOutputRef}
-            onClick={() => inputRef.current?.focus()}
-            className="p-5 font-mono text-xs sm:text-sm h-[340px] overflow-y-auto space-y-3 bg-[#0a0e17] text-slate-100"
+            className="p-6 font-mono text-xs text-slate-200 h-[380px] overflow-y-auto space-y-4 bg-[#070910]"
           >
             {logs.map((log) => (
-              <div key={log.id} className="space-y-1 leading-relaxed">
-                <div className="flex items-center gap-2">
-                  {log.isAiMode ? (
-                    <span className="text-purple-400 font-bold flex items-center gap-1">
-                      <Bot className="w-3 h-3" />
-                      <span>user@groq-ai:~$</span>
-                    </span>
-                  ) : (
-                    <span className="text-cyan-400 font-bold">devara@sys:~$</span>
-                  )}
-                  <span className="text-white font-bold">{log.command}</span>
+              <div key={log.id} className="space-y-1.5">
+                <div className="flex items-center gap-2 text-slate-400">
+                  <span className="text-cyan-400 font-bold">➜</span>
+                  <span className="text-emerald-400 font-semibold">devara@arch:~$</span>
+                  <span className="text-white font-medium">{log.command}</span>
                 </div>
-                <div className="pl-4 text-slate-300">{log.output}</div>
+                <div className="pl-4">{log.output}</div>
               </div>
             ))}
+          </div>
 
-            {/* Active Command Input Line */}
-            <div className="flex items-center gap-2 pt-1">
-              {isAiSession ? (
-                <span className="text-purple-400 font-bold flex items-center gap-1">
-                  <Bot className="w-3 h-3" />
-                  <span>user@groq-ai:~$</span>
-                </span>
-              ) : (
-                <span className="text-cyan-400 font-bold">devara@sys:~$</span>
-              )}
-              <input
-                ref={inputRef}
-                type="text"
-                disabled={isAiLoading}
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={handleKeyDown}
-                placeholder={
-                  isAiLoading
-                    ? "Groq AI sedang berpikir..."
-                    : isAiSession
-                    ? "tanyakan ke Groq AI (atau ketik 'exit')..."
-                    : "type command (or 'sudo ai')..."
-                }
-                className="flex-1 bg-transparent text-white font-mono focus:outline-none placeholder:text-slate-600 text-xs sm:text-sm disabled:opacity-50"
-              />
-              <button
-                onClick={() => handleCommand(input)}
-                disabled={isAiLoading}
-                className="p-1 rounded bg-slate-800 text-slate-300 hover:text-white transition-colors disabled:opacity-40"
-                title="Execute"
-              >
-                <CornerDownLeft className="w-3.5 h-3.5" />
-              </button>
-            </div>
+          {/* Terminal Input Line */}
+          <div className="px-6 py-4 bg-[#0a0d17] border-t border-white/[0.08] flex items-center gap-3">
+            <span className="text-cyan-400 font-bold">➜</span>
+            <span className="text-emerald-400 font-semibold text-xs font-mono">devara@arch:~$</span>
+            <input
+              ref={inputRef}
+              type="text"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder="Ketik 'help' atau 'ai Bagaimana cara optimasi query database?'"
+              className="flex-1 bg-transparent text-white font-mono text-xs focus:outline-none placeholder-slate-600"
+            />
+            <button
+              onClick={() => handleCommand(input)}
+              className="px-3 py-1 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-slate-950 text-xs font-mono font-bold transition-all flex items-center gap-1"
+            >
+              <span>JALANKAN</span>
+              <CornerDownLeft className="w-3 h-3" />
+            </button>
           </div>
         </div>
       </div>

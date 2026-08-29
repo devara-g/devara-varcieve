@@ -4,9 +4,11 @@ import React, { useState, useEffect } from "react";
 import { MatrixBackground } from "@/components/ui/MatrixBackground";
 import { Navbar } from "@/components/ui/Navbar";
 import { HeroSection } from "@/components/hero/HeroSection";
-import { DataLogSection } from "@/components/about/DataLogSection";
-import { TechArsenal } from "@/components/tech/TechArsenal";
+import { SystemArchitecture } from "@/components/architecture/SystemArchitecture";
+import { ArchitecturePlayground } from "@/components/playground/ArchitecturePlayground";
 import { ProjectsSection } from "@/components/projects/ProjectsSection";
+import { TechArsenal } from "@/components/tech/TechArsenal";
+import { DataLogSection } from "@/components/about/DataLogSection";
 import { InteractiveCLI } from "@/components/terminal/InteractiveCLI";
 import { UplinkContact } from "@/components/contact/UplinkContact";
 import { MusicPlayer } from "@/components/audio/MusicPlayer";
@@ -18,7 +20,6 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
 
-  // Prevent jumping to hash on refresh; always start cleanly at top
   useEffect(() => {
     if (typeof window !== "undefined") {
       if ("scrollRestoration" in window.history) {
@@ -29,33 +30,35 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="relative min-h-screen bg-black text-slate-100 overflow-x-hidden selection:bg-cyan-500 selection:text-black">
-      {/* System Boot Initializer Preloader Screen */}
+    <main className="relative min-h-screen bg-[#07080b] text-slate-100 overflow-x-hidden selection:bg-cyan-500/20 selection:text-white">
+      {/* System Boot Preloader */}
       {isLoading && (
         <PreloaderScreen onComplete={() => setIsLoading(false)} />
       )}
 
-      {/* Dynamic Cyber Matrix Canvas Background */}
+      {/* Ambient Lighting & Mesh Background */}
       <MatrixBackground />
 
-      {/* Sticky Cyber HUD Navbar */}
+      {/* Sticky Navigation Bar */}
       <Navbar onOpenCommandPalette={() => setCommandPaletteOpen(true)} />
 
-      {/* Main Content Sections */}
+      {/* Main High-Impact Engineering Content Sections */}
       <div className="relative z-10">
         <HeroSection />
-        <DataLogSection />
-        <TechArsenal />
+        <SystemArchitecture />
+        <ArchitecturePlayground />
         <ProjectsSection />
+        <TechArsenal />
+        <DataLogSection />
         <InteractiveCLI />
         <UplinkContact />
         <Footer />
       </div>
 
-      {/* Floating Vinyl Audio Player (Only shows after initial boot) */}
+      {/* Floating Vinyl Audio Deck */}
       {!isLoading && <MusicPlayer />}
 
-      {/* Global Command Palette (Ctrl+K / Cmd+K) */}
+      {/* Global Command Palette (Cmd+K / Ctrl+K) */}
       <CommandPalette
         isOpen={commandPaletteOpen}
         onClose={() => setCommandPaletteOpen(false)}

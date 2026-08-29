@@ -15,52 +15,53 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const viewport: Viewport = {
-  themeColor: "#00f2fe",
+  themeColor: "#07080b",
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
 };
 
 export const metadata: Metadata = {
-  title: "DEVARA.SYS // Muhammad Devara - Backend Architect & Full Stack Developer",
+  title: "Muhammad Devara — Backend Architect & Distributed Systems Engineer",
   description:
-    "Engineering scalable server-side infrastructure, ultra-low latency APIs, and high-performance digital neural networks.",
+    "Engineering high-concurrency microservices, sub-20ms P99 APIs, database query optimization, and resilient full-stack platforms.",
   keywords: [
     "Muhammad Devara",
     "Devara",
     "Backend Architect",
-    "Full Stack Developer",
-    "Laravel",
-    "Node.js",
-    "MySQL",
+    "Distributed Systems",
+    "Systems Engineer",
     "PostgreSQL",
+    "Node.js",
+    "Laravel",
     "Docker",
+    "Redis",
     "Next.js",
-    "Indonesia Developer",
+    "Software Engineer",
   ],
   authors: [{ name: "Muhammad Devara" }],
   openGraph: {
-    title: "DEVARA.SYS // Muhammad Devara - Backend Architect",
+    title: "Muhammad Devara — Backend Architect & Distributed Systems Engineer",
     description:
-      "Engineering scalable server-side infrastructure, ultra-low latency APIs, and high-performance digital neural networks.",
-    url: "https://devara.sys",
-    siteName: "DEVARA.SYS",
+      "Engineering high-concurrency microservices, sub-20ms P99 APIs, database query optimization, and resilient full-stack platforms.",
+    url: "https://devara.dev",
+    siteName: "Muhammad Devara Portfolio",
     images: [
       {
         url: "/assets/og.png",
         width: 1200,
         height: 630,
-        alt: "DEVARA.SYS Profile",
+        alt: "Muhammad Devara — Systems Engineering Portfolio",
       },
     ],
-    locale: "id_ID",
+    locale: "en_US",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "DEVARA.SYS // Muhammad Devara - Backend Architect",
+    title: "Muhammad Devara — Backend Architect & Distributed Systems Engineer",
     description:
-      "Engineering scalable server-side infrastructure, ultra-low latency APIs, and high-performance digital neural networks.",
+      "Engineering high-concurrency microservices, sub-20ms P99 APIs, database query optimization, and resilient full-stack platforms.",
     images: ["/assets/og.png"],
   },
   icons: {
@@ -74,8 +75,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="id" className={`${inter.variable} ${jetbrainsMono.variable} dark scroll-smooth`}>
-      <body className="bg-[#06080f] text-slate-100 font-sans antialiased min-h-screen selection:bg-cyan-400 selection:text-slate-950">
+    <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable} dark scroll-smooth`}>
+      <body className="bg-[#07080b] text-slate-100 font-sans antialiased min-h-screen selection:bg-cyan-500/20 selection:text-white">
         {children}
       </body>
     </html>
