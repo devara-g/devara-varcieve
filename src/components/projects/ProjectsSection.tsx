@@ -5,6 +5,7 @@ import Image from "next/image";
 import { BIODATA, ProjectCaseStudy } from "@/data/biodata";
 import { sounds } from "@/lib/soundEffects";
 import { GithubIcon } from "@/components/ui/Icons";
+import { ScrollReveal, StaggerContainer, StaggerItem } from "@/components/ui/ScrollReveal";
 import {
   FolderGit2,
   Star,
@@ -109,235 +110,239 @@ export function ProjectsSection() {
     <section id="projects" className="py-24 relative z-10 border-t border-white/[0.08] scroll-mt-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 border-b border-white/[0.08] pb-6">
-          <div>
-            <div className="flex items-center gap-2 text-cyan-400 font-mono text-xs tracking-widest uppercase mb-2">
-              <FolderGit2 className="w-4 h-4" />
-              <span>SISTEM PRODUKSI & STUDI KASUS</span>
+        <ScrollReveal delay={0.1} distance={20}>
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 border-b border-white/[0.08] pb-6">
+            <div>
+              <div className="flex items-center gap-2 text-cyan-400 font-mono text-xs tracking-widest uppercase mb-2">
+                <FolderGit2 className="w-4 h-4" />
+                <span>SISTEM PRODUKSI & STUDI KASUS</span>
+              </div>
+              <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight flex items-center gap-3">
+                <span>Proyek Unggulan</span>
+                <span className="text-xs font-mono font-semibold px-2.5 py-0.5 rounded-full bg-cyan-950/80 text-cyan-300 border border-cyan-500/30">
+                  Studi Kasus Arsitektur
+                </span>
+              </h2>
             </div>
-            <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight flex items-center gap-3">
-              <span>Proyek Unggulan</span>
-              <span className="text-xs font-mono font-semibold px-2.5 py-0.5 rounded-full bg-cyan-950/80 text-cyan-300 border border-cyan-500/30">
-                Studi Kasus Arsitektur
-              </span>
-            </h2>
-          </div>
 
-          {/* Tab Switcher */}
-          <div className="mt-4 md:mt-0 flex items-center gap-2 bg-[#090b12] p-1.5 rounded-2xl border border-white/[0.08]">
-            <button
-              onClick={() => {
-                sounds.playClick();
-                setActiveTab("featured");
-              }}
-              className={`px-4 py-2 rounded-xl text-xs font-mono font-bold transition-all ${
-                activeTab === "featured"
-                  ? "bg-cyan-500 text-slate-950 shadow-[0_0_15px_rgba(6,182,212,0.3)]"
-                  : "text-slate-400 hover:text-white"
-              }`}
-            >
-              Sistem Unggulan ({BIODATA.projects.length})
-            </button>
-            <button
-              onClick={() => {
-                sounds.playClick();
-                setActiveTab("github");
-              }}
-              className={`px-4 py-2 rounded-xl text-xs font-mono font-bold transition-all ${
-                activeTab === "github"
-                  ? "bg-cyan-500 text-slate-950 shadow-[0_0_15px_rgba(6,182,212,0.3)]"
-                  : "text-slate-400 hover:text-white"
-              }`}
-            >
-              Repositori GitHub ({repos.length || "..."})
-            </button>
+            {/* Tab Switcher */}
+            <div className="mt-4 md:mt-0 flex flex-col sm:flex-row items-stretch sm:items-center gap-1.5 sm:gap-2 bg-[#090b12] p-1.5 rounded-2xl border border-white/[0.08] w-full sm:w-auto">
+              <button
+                onClick={() => {
+                  sounds.playClick();
+                  setActiveTab("featured");
+                }}
+                className={`px-3.5 sm:px-4 py-2 rounded-xl text-xs font-mono font-bold transition-all text-center ${
+                  activeTab === "featured"
+                    ? "bg-cyan-500 text-slate-950 shadow-[0_0_15px_rgba(6,182,212,0.3)]"
+                    : "text-slate-400 hover:text-white"
+                }`}
+              >
+                Sistem Unggulan ({BIODATA.projects.length})
+              </button>
+              <button
+                onClick={() => {
+                  sounds.playClick();
+                  setActiveTab("github");
+                }}
+                className={`px-3.5 sm:px-4 py-2 rounded-xl text-xs font-mono font-bold transition-all text-center ${
+                  activeTab === "github"
+                    ? "bg-cyan-500 text-slate-950 shadow-[0_0_15px_rgba(6,182,212,0.3)]"
+                    : "text-slate-400 hover:text-white"
+                }`}
+              >
+                Repositori GitHub ({repos.length || "..."})
+              </button>
+            </div>
           </div>
-        </div>
+        </ScrollReveal>
 
         {/* TAB 1: Featured RFC Case Studies */}
         {activeTab === "featured" && (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <StaggerContainer className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {BIODATA.projects.map((project) => (
-              <div
-                key={project.id}
-                onClick={() => {
-                  sounds.playClick();
-                  setSelectedCaseStudy(project);
-                }}
-                className="group cursor-pointer glass-panel-interactive rounded-3xl overflow-hidden border border-white/[0.08] flex flex-col justify-between"
-              >
-                {/* Project Image Preview */}
-                <div className="relative w-full h-48 bg-[#090d16] overflow-hidden">
-                  <Image
-                    src={project.image}
-                    alt={project.title}
-                    fill
-                    className="object-cover object-top group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#090b12] via-transparent to-transparent" />
+              <StaggerItem key={project.id}>
+                <div
+                  onClick={() => {
+                    sounds.playClick();
+                    setSelectedCaseStudy(project);
+                  }}
+                  className="h-full group cursor-pointer glass-panel-interactive rounded-3xl overflow-hidden border border-white/[0.08] flex flex-col justify-between"
+                >
+                  {/* Project Image Preview */}
+                  <div className="relative w-full h-48 bg-[#090d16] overflow-hidden">
+                    <Image
+                      src={project.image}
+                      alt={project.title}
+                      fill
+                      className="object-cover object-top group-hover:scale-105 transition-transform duration-500"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#090b12] via-transparent to-transparent" />
 
-                  {/* Top Badge */}
-                  <div className="absolute top-3 left-3">
-                    <span className="px-2.5 py-1 rounded-lg bg-black/80 backdrop-blur-md border border-white/[0.1] text-[10px] font-mono text-cyan-300 font-bold uppercase">
-                      {project.badge}
-                    </span>
-                  </div>
-
-                  <div className="absolute top-3 right-3">
-                    <span className="p-2 rounded-xl bg-black/80 backdrop-blur-md border border-white/[0.1] text-slate-300 group-hover:text-cyan-400 transition-colors flex items-center">
-                      <ArrowUpRight className="w-3.5 h-3.5" />
-                    </span>
-                  </div>
-                </div>
-
-                {/* Project Body Info */}
-                <div className="p-6 flex-1 flex flex-col justify-between space-y-4">
-                  <div>
-                    <span className="text-[10px] font-mono text-slate-400 uppercase tracking-wider block mb-1">
-                      {project.category}
-                    </span>
-                    <h3 className="text-base font-bold font-mono text-white group-hover:text-cyan-300 transition-colors leading-snug">
-                      {project.title}
-                    </h3>
-                    <p className="text-xs text-slate-300 line-clamp-2 mt-2 leading-relaxed">
-                      {project.summary}
-                    </p>
-                  </div>
-
-                  {/* Metrics Telemetry Bar */}
-                  <div className="grid grid-cols-2 gap-2 pt-2 border-t border-white/[0.06]">
-                    <div className="p-2 rounded-lg bg-black/40 border border-white/[0.04]">
-                      <span className="text-[9px] font-mono text-slate-400 block uppercase">Latensi P99</span>
-                      <span className="text-xs font-mono font-bold text-cyan-300">{project.metrics.latency}</span>
-                    </div>
-                    <div className="p-2 rounded-lg bg-black/40 border border-white/[0.04]">
-                      <span className="text-[9px] font-mono text-slate-400 block uppercase">Efisiensi</span>
-                      <span className="text-xs font-mono font-bold text-emerald-400">{project.metrics.efficiency}</span>
-                    </div>
-                  </div>
-
-                  {/* Tech Tags */}
-                  <div className="flex flex-wrap items-center gap-1.5 pt-1">
-                    {project.tags.slice(0, 4).map((tag) => (
-                      <span
-                        key={tag}
-                        className="px-2 py-0.5 rounded-md bg-slate-900 border border-white/[0.06] text-[10px] font-mono text-slate-300"
-                      >
-                        {tag}
+                    {/* Top Badge */}
+                    <div className="absolute top-3 left-3">
+                      <span className="px-2.5 py-1 rounded-lg bg-black/80 backdrop-blur-md border border-white/[0.1] text-[10px] font-mono text-cyan-300 font-bold uppercase">
+                        {project.badge}
                       </span>
-                    ))}
+                    </div>
+
+                    <div className="absolute top-3 right-3">
+                      <span className="p-2 rounded-xl bg-black/80 backdrop-blur-md border border-white/[0.1] text-slate-300 group-hover:text-cyan-400 transition-colors flex items-center">
+                        <ArrowUpRight className="w-3.5 h-3.5" />
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Project Body Info */}
+                  <div className="p-6 flex-1 flex flex-col justify-between space-y-4">
+                    <div>
+                      <span className="text-[10px] font-mono text-slate-400 uppercase tracking-wider block mb-1">
+                        {project.category}
+                      </span>
+                      <h3 className="text-base font-bold font-mono text-white group-hover:text-cyan-300 transition-colors leading-snug">
+                        {project.title}
+                      </h3>
+                      <p className="text-xs text-slate-300 line-clamp-2 mt-2 leading-relaxed">
+                        {project.summary}
+                      </p>
+                    </div>
+
+                    {/* Metrics Telemetry Bar */}
+                    <div className="grid grid-cols-2 gap-2 pt-2 border-t border-white/[0.06]">
+                      <div className="p-2 rounded-lg bg-black/40 border border-white/[0.04]">
+                        <span className="text-[9px] font-mono text-slate-400 block uppercase">Latensi P99</span>
+                        <span className="text-xs font-mono font-bold text-cyan-300">{project.metrics.latency}</span>
+                      </div>
+                      <div className="p-2 rounded-lg bg-black/40 border border-white/[0.04]">
+                        <span className="text-[9px] font-mono text-slate-400 block uppercase">Efisiensi</span>
+                        <span className="text-xs font-mono font-bold text-emerald-400">{project.metrics.efficiency}</span>
+                      </div>
+                    </div>
+
+                    {/* Tech Tags */}
+                    <div className="flex flex-wrap items-center gap-1.5 pt-1">
+                      {project.tags.slice(0, 4).map((tag) => (
+                        <span
+                          key={tag}
+                          className="px-2 py-0.5 rounded-md bg-slate-900 border border-white/[0.06] text-[10px] font-mono text-slate-300"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
                   </div>
                 </div>
-              </div>
+              </StaggerItem>
             ))}
-          </div>
+          </StaggerContainer>
         )}
 
         {/* TAB 2: Live GitHub Repositories Explorer */}
         {activeTab === "github" && (
           <div className="space-y-6">
             {/* Filter and Search Bar */}
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 glass-panel p-4 rounded-2xl border border-white/[0.08]">
-              {/* Language Pills */}
-              <div className="flex flex-wrap items-center gap-2">
-                {languages.map((lang) => (
-                  <button
-                    key={lang}
-                    onClick={() => {
-                      sounds.playClick();
-                      setSelectedLanguage(lang);
-                    }}
-                    className={`px-3 py-1.5 rounded-xl text-xs font-mono font-semibold transition-all border ${
-                      selectedLanguage === lang
-                        ? "bg-cyan-500 text-slate-950 border-cyan-400 font-bold shadow-[0_0_10px_rgba(6,182,212,0.3)]"
-                        : "bg-slate-900 border-white/[0.08] text-slate-300 hover:text-white"
-                    }`}
-                  >
-                    {lang}
-                  </button>
-                ))}
-              </div>
+            <ScrollReveal delay={0.1} distance={15}>
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-4 glass-panel p-4 rounded-2xl border border-white/[0.08]">
+                {/* Language Pills */}
+                <div className="flex flex-wrap items-center gap-2">
+                  {languages.map((lang) => (
+                    <button
+                      key={lang}
+                      onClick={() => {
+                        sounds.playClick();
+                        setSelectedLanguage(lang);
+                      }}
+                      className={`px-3 py-1.5 rounded-xl text-xs font-mono font-semibold transition-all border ${
+                        selectedLanguage === lang
+                          ? "bg-cyan-500 text-slate-950 border-cyan-400 font-bold shadow-[0_0_10px_rgba(6,182,212,0.3)]"
+                          : "bg-slate-900 border-white/[0.08] text-slate-300 hover:text-white"
+                      }`}
+                    >
+                      {lang}
+                    </button>
+                  ))}
+                </div>
 
-              {/* Search Box */}
-              <div className="relative w-full sm:w-64">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400" />
-                <input
-                  type="text"
-                  placeholder="Cari repositori..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-9 pr-3 py-1.5 bg-black/60 border border-white/[0.08] rounded-xl text-xs font-mono text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400"
-                />
+                {/* Search Box */}
+                <div className="relative w-full sm:w-64">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400" />
+                  <input
+                    type="text"
+                    placeholder="Cari repositori..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full pl-9 pr-3 py-1.5 bg-black/60 border border-white/[0.08] rounded-xl text-xs font-mono text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400"
+                  />
+                </div>
               </div>
-            </div>
+            </ScrollReveal>
 
             {/* Repos Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <StaggerContainer className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {filteredRepos.map((repo) => (
-                <div
-                  key={repo.id}
-                  className="glass-panel p-5 rounded-2xl border border-white/[0.08] hover:border-cyan-500/40 transition-all flex flex-col justify-between space-y-4"
-                >
-                  <div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-cyan-950/60 text-cyan-400 border border-cyan-500/20 font-semibold">
-                        {repo.language}
-                      </span>
-                      <div className="flex items-center gap-2 text-xs font-mono text-slate-400">
-                        <span className="flex items-center gap-1">
-                          <Star className="w-3 h-3 text-amber-400" /> {repo.stars}
+                <StaggerItem key={repo.id}>
+                  <div className="h-full glass-panel p-5 rounded-2xl border border-white/[0.08] hover:border-cyan-500/40 transition-all flex flex-col justify-between space-y-4">
+                    <div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-cyan-950/60 text-cyan-400 border border-cyan-500/20 font-semibold">
+                          {repo.language}
                         </span>
-                        <span className="flex items-center gap-1">
-                          <GitFork className="w-3 h-3 text-slate-400" /> {repo.forks}
-                        </span>
+                        <div className="flex items-center gap-2 text-xs font-mono text-slate-400">
+                          <span className="flex items-center gap-1">
+                            <Star className="w-3 h-3 text-amber-400" /> {repo.stars}
+                          </span>
+                          <span className="flex items-center gap-1">
+                            <GitFork className="w-3 h-3 text-slate-400" /> {repo.forks}
+                          </span>
+                        </div>
                       </div>
+
+                      <h4 className="text-sm font-bold font-mono text-white mt-3 leading-tight">{repo.title}</h4>
+                      <p className="text-xs text-slate-400 mt-2 line-clamp-2 leading-relaxed">{repo.description}</p>
                     </div>
 
-                    <h4 className="text-sm font-bold font-mono text-white mt-3 leading-tight">{repo.title}</h4>
-                    <p className="text-xs text-slate-400 mt-2 line-clamp-2 leading-relaxed">{repo.description}</p>
-                  </div>
-
-                  {/* Actions */}
-                  <div className="flex items-center justify-between pt-3 border-t border-white/[0.06]">
-                    <a
-                      href={repo.githubUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-xs font-mono text-slate-300 hover:text-cyan-300 transition-colors flex items-center gap-1.5"
-                    >
-                      <GithubIcon className="w-3.5 h-3.5" />
-                      <span>Source Code</span>
-                    </a>
-
-                    {repo.hasLiveDemo && (
+                    {/* Actions */}
+                    <div className="flex items-center justify-between pt-3 border-t border-white/[0.06]">
                       <a
-                        href={repo.liveUrl}
+                        href={repo.githubUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-xs font-mono text-cyan-400 hover:text-cyan-300 transition-colors flex items-center gap-1"
+                        className="text-xs font-mono text-slate-300 hover:text-cyan-300 transition-colors flex items-center gap-1.5"
                       >
-                        <span>Live Demo</span>
-                        <ExternalLink className="w-3 h-3" />
+                        <GithubIcon className="w-3.5 h-3.5" />
+                        <span>Source Code</span>
                       </a>
-                    )}
+
+                      {repo.hasLiveDemo && (
+                        <a
+                          href={repo.liveUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-xs font-mono text-cyan-400 hover:text-cyan-300 transition-colors flex items-center gap-1"
+                        >
+                          <span>Live Demo</span>
+                          <ExternalLink className="w-3 h-3" />
+                        </a>
+                      )}
+                    </div>
                   </div>
-                </div>
+                </StaggerItem>
               ))}
-            </div>
+            </StaggerContainer>
           </div>
         )}
 
         {/* RFC Deep Dive Case Study Modal */}
         {selectedCaseStudy && (
-          <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
-            <div className="relative w-full max-w-4xl bg-[#090b14] border border-white/[0.12] rounded-3xl shadow-2xl overflow-hidden my-8 max-h-[90vh] flex flex-col">
+          <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+            <div className="relative w-full max-w-2xl bg-[#090b14] border border-white/[0.12] rounded-2xl shadow-2xl overflow-hidden my-auto max-h-[86vh] flex flex-col">
               {/* Modal Header */}
-              <div className="px-6 py-4 bg-[#0d101a] border-b border-white/[0.08] flex items-center justify-between shrink-0">
-                <div className="flex items-center gap-3">
-                  <span className="px-2.5 py-1 rounded-lg bg-cyan-950 text-cyan-300 border border-cyan-500/30 text-xs font-mono font-bold">
-                    STUDI KASUS RFC // 0{selectedCaseStudy.id}
+              <div className="px-4 py-3 bg-[#0d101a] border-b border-white/[0.08] flex items-center justify-between shrink-0">
+                <div className="flex items-center gap-2 truncate">
+                  <span className="px-2 py-0.5 rounded-lg bg-cyan-950 text-cyan-300 border border-cyan-500/30 text-[10px] font-mono font-bold shrink-0">
+                    RFC // 0{selectedCaseStudy.id}
                   </span>
-                  <span className="text-xs font-mono text-slate-400">{selectedCaseStudy.category}</span>
+                  <span className="text-[11px] font-mono text-slate-400 truncate">{selectedCaseStudy.category}</span>
                 </div>
 
                 <button
@@ -345,58 +350,59 @@ export function ProjectsSection() {
                     sounds.playClick();
                     setSelectedCaseStudy(null);
                   }}
-                  className="p-1.5 rounded-xl hover:bg-slate-800 text-slate-400 hover:text-white transition-colors"
+                  className="p-1 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition-colors shrink-0 ml-2"
+                  title="Tutup Modal"
                 >
-                  <X className="w-5 h-5" />
+                  <X className="w-4 h-4" />
                 </button>
               </div>
 
               {/* Modal Body */}
-              <div className="p-6 sm:p-8 overflow-y-auto space-y-6 font-sans">
+              <div className="p-4 sm:p-6 overflow-y-auto space-y-4 font-sans text-xs">
                 {/* Title & Summary */}
                 <div>
-                  <h3 className="text-2xl font-black font-mono text-white leading-tight">
+                  <h3 className="text-base sm:text-xl font-bold font-mono text-white leading-tight">
                     {selectedCaseStudy.title}
                   </h3>
-                  <p className="text-sm text-slate-300 mt-2 leading-relaxed">
+                  <p className="text-xs text-slate-300 mt-1 leading-relaxed">
                     {selectedCaseStudy.summary}
                   </p>
                 </div>
 
                 {/* Production Metrics Row */}
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                  <div className="p-3.5 rounded-xl bg-black/50 border border-white/[0.08]">
-                    <span className="text-[10px] font-mono text-slate-400 uppercase block">Latensi P99</span>
-                    <span className="text-base font-mono font-bold text-cyan-300">{selectedCaseStudy.metrics.latency}</span>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                  <div className="p-2.5 rounded-xl bg-black/50 border border-white/[0.08]">
+                    <span className="text-[9px] font-mono text-slate-400 uppercase block">Latensi P99</span>
+                    <span className="text-sm font-mono font-bold text-cyan-300">{selectedCaseStudy.metrics.latency}</span>
                   </div>
-                  <div className="p-3.5 rounded-xl bg-black/50 border border-white/[0.08]">
-                    <span className="text-[10px] font-mono text-slate-400 uppercase block">Throughput</span>
-                    <span className="text-base font-mono font-bold text-emerald-400">{selectedCaseStudy.metrics.throughput}</span>
+                  <div className="p-2.5 rounded-xl bg-black/50 border border-white/[0.08]">
+                    <span className="text-[9px] font-mono text-slate-400 uppercase block">Throughput</span>
+                    <span className="text-sm font-mono font-bold text-emerald-400">{selectedCaseStudy.metrics.throughput}</span>
                   </div>
-                  <div className="p-3.5 rounded-xl bg-black/50 border border-white/[0.08]">
-                    <span className="text-[10px] font-mono text-slate-400 uppercase block">SLA Uptime</span>
-                    <span className="text-base font-mono font-bold text-slate-200">{selectedCaseStudy.metrics.uptime}</span>
+                  <div className="p-2.5 rounded-xl bg-black/50 border border-white/[0.08]">
+                    <span className="text-[9px] font-mono text-slate-400 uppercase block">SLA Uptime</span>
+                    <span className="text-sm font-mono font-bold text-slate-200">{selectedCaseStudy.metrics.uptime}</span>
                   </div>
-                  <div className="p-3.5 rounded-xl bg-black/50 border border-white/[0.08]">
-                    <span className="text-[10px] font-mono text-slate-400 uppercase block">Optimasi Query</span>
-                    <span className="text-base font-mono font-bold text-amber-300">{selectedCaseStudy.metrics.efficiency}</span>
+                  <div className="p-2.5 rounded-xl bg-black/50 border border-white/[0.08]">
+                    <span className="text-[9px] font-mono text-slate-400 uppercase block">Optimasi</span>
+                    <span className="text-sm font-mono font-bold text-amber-300">{selectedCaseStudy.metrics.efficiency}</span>
                   </div>
                 </div>
 
                 {/* Architectural Flow */}
-                <div className="space-y-3">
-                  <h4 className="text-xs font-mono font-bold text-cyan-400 uppercase tracking-wider flex items-center gap-2">
-                    <Layers className="w-4 h-4" />
+                <div className="space-y-2">
+                  <h4 className="text-[11px] font-mono font-bold text-cyan-400 uppercase tracking-wider flex items-center gap-1.5">
+                    <Layers className="w-3.5 h-3.5" />
                     <span>Arsitektur Sistem & Pipeline Request</span>
                   </h4>
                   <p className="text-xs text-slate-300 leading-relaxed">
                     {selectedCaseStudy.architecture.overview}
                   </p>
-                  <div className="space-y-2 pt-1">
+                  <div className="space-y-1.5 pt-0.5">
                     {selectedCaseStudy.architecture.flow.map((step, idx) => (
                       <div
                         key={idx}
-                        className="flex items-start gap-2.5 p-2.5 rounded-xl bg-black/40 border border-white/[0.04] text-xs text-slate-200 font-mono"
+                        className="flex items-start gap-2 p-2 rounded-lg bg-black/40 border border-white/[0.04] text-[11px] text-slate-200 font-mono"
                       >
                         <span className="text-cyan-400 font-bold">0{idx + 1}.</span>
                         <span>{step}</span>
@@ -406,23 +412,23 @@ export function ProjectsSection() {
                 </div>
 
                 {/* Concurrency & Database Strategy */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="p-4 rounded-2xl bg-[#0d101a] border border-white/[0.08] space-y-2">
-                    <h5 className="text-xs font-mono font-bold text-slate-200 uppercase flex items-center gap-2">
-                      <ShieldCheck className="w-3.5 h-3.5 text-cyan-400" />
-                      <span>Pertimbangan Konkurensi & Integritas</span>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                  <div className="p-3 rounded-xl bg-[#0d101a] border border-white/[0.08] space-y-1">
+                    <h5 className="text-[10.5px] font-mono font-bold text-slate-200 uppercase flex items-center gap-1.5">
+                      <ShieldCheck className="w-3 h-3 text-cyan-400" />
+                      <span>Konkurensi & Integritas</span>
                     </h5>
-                    <p className="text-xs text-slate-300 leading-relaxed">
+                    <p className="text-[11px] text-slate-300 leading-relaxed">
                       {selectedCaseStudy.architecture.tradeOffs}
                     </p>
                   </div>
 
-                  <div className="p-4 rounded-2xl bg-[#0d101a] border border-white/[0.08] space-y-2">
-                    <h5 className="text-xs font-mono font-bold text-slate-200 uppercase flex items-center gap-2">
-                      <Database className="w-3.5 h-3.5 text-emerald-400" />
+                  <div className="p-3 rounded-xl bg-[#0d101a] border border-white/[0.08] space-y-1">
+                    <h5 className="text-[10.5px] font-mono font-bold text-slate-200 uppercase flex items-center gap-1.5">
+                      <Database className="w-3 h-3 text-emerald-400" />
                       <span>Strategi Indeks Database</span>
                     </h5>
-                    <p className="text-xs text-slate-300 leading-relaxed">
+                    <p className="text-[11px] text-slate-300 leading-relaxed">
                       {selectedCaseStudy.architecture.databaseStrategy}
                     </p>
                   </div>
@@ -430,46 +436,46 @@ export function ProjectsSection() {
 
                 {/* Code Sample */}
                 {selectedCaseStudy.codeSample && (
-                  <div className="rounded-2xl bg-[#06080e] border border-white/[0.08] overflow-hidden">
-                    <div className="px-4 py-2.5 bg-[#0a0d14] border-b border-white/[0.08] flex items-center justify-between">
-                      <span className="text-xs font-mono text-slate-400">
+                  <div className="rounded-xl bg-[#06080e] border border-white/[0.08] overflow-hidden">
+                    <div className="px-3 py-2 bg-[#0a0d14] border-b border-white/[0.08] flex items-center justify-between">
+                      <span className="text-[11px] font-mono text-slate-400">
                         {selectedCaseStudy.codeSample.filename}
                       </span>
                       <button
                         onClick={() => handleCopyCode(selectedCaseStudy.codeSample!.code)}
-                        className="p-1 rounded text-slate-400 hover:text-white transition-colors flex items-center gap-1 text-[11px] font-mono"
+                        className="p-1 rounded text-slate-400 hover:text-white transition-colors flex items-center gap-1 text-[10px] font-mono"
                       >
                         {copiedCode ? (
                           <>
-                            <Check className="w-3.5 h-3.5 text-emerald-400" />
+                            <Check className="w-3 h-3 text-emerald-400" />
                             <span className="text-emerald-400">Tersalin</span>
                           </>
                         ) : (
                           <>
-                            <Copy className="w-3.5 h-3.5" />
+                            <Copy className="w-3 h-3" />
                             <span>Salin Kode</span>
                           </>
                         )}
                       </button>
                     </div>
-                    <pre className="p-4 font-mono text-xs text-slate-200 overflow-x-auto leading-relaxed">
+                    <pre className="p-3 font-mono text-[10.5px] text-slate-200 overflow-x-auto leading-relaxed max-h-48">
                       <code>{selectedCaseStudy.codeSample.code}</code>
                     </pre>
                   </div>
                 )}
 
                 {/* Key Features List */}
-                <div className="space-y-2">
-                  <h4 className="text-xs font-mono font-bold text-white uppercase tracking-wider">
+                <div className="space-y-1.5">
+                  <h4 className="text-[11px] font-mono font-bold text-white uppercase tracking-wider">
                     Fitur & Kapabilitas Teknis Utama
                   </h4>
-                  <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  <ul className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
                     {selectedCaseStudy.keyFeatures.map((feat, idx) => (
                       <li
                         key={idx}
-                        className="flex items-start gap-2 text-xs text-slate-300 font-sans leading-snug"
+                        className="flex items-start gap-1.5 text-[11px] text-slate-300 font-sans leading-snug"
                       >
-                        <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shrink-0 mt-1.5" />
+                        <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shrink-0 mt-1" />
                         <span>{feat}</span>
                       </li>
                     ))}
@@ -477,15 +483,15 @@ export function ProjectsSection() {
                 </div>
 
                 {/* Action Links */}
-                <div className="flex flex-wrap items-center gap-3 pt-4 border-t border-white/[0.08]">
+                <div className="flex flex-wrap items-center gap-2 pt-3 border-t border-white/[0.08]">
                   {selectedCaseStudy.liveUrl && selectedCaseStudy.liveUrl !== "#" && (
                     <a
                       href={selectedCaseStudy.liveUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="px-5 py-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-mono text-xs font-bold transition-all shadow-[0_0_15px_rgba(6,182,212,0.3)] flex items-center gap-2"
+                      className="px-4 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-mono text-xs font-bold transition-all shadow-[0_0_15px_rgba(6,182,212,0.3)] flex items-center gap-1.5"
                     >
-                      <span>BUKA PLATFORM LANGSUNG</span>
+                      <span>BUKA PLATFORM</span>
                       <ExternalLink className="w-3.5 h-3.5" />
                     </a>
                   )}
@@ -495,10 +501,10 @@ export function ProjectsSection() {
                       href={selectedCaseStudy.githubUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-white/[0.1] text-slate-200 font-mono text-xs font-semibold transition-all flex items-center gap-2"
+                      className="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-white/[0.1] text-slate-200 font-mono text-xs font-semibold transition-all flex items-center gap-1.5"
                     >
                       <GithubIcon className="w-3.5 h-3.5" />
-                      <span>LIHAT REPOSITORI GITHUB</span>
+                      <span>REPOSITORI GITHUB</span>
                     </a>
                   )}
                 </div>

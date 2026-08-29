@@ -84,6 +84,30 @@ class SoundManager {
     } catch {}
   }
 
+  public playCardFlip() {
+    if (!this.soundEnabled) return;
+    const ctx = this.getContext();
+    if (!ctx) return;
+
+    try {
+      const now = ctx.currentTime;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(260, now);
+      osc.frequency.exponentialRampToValueAtTime(850, now + 0.07);
+      osc.frequency.exponentialRampToValueAtTime(320, now + 0.16);
+
+      gain.gain.setValueAtTime(0.05, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.16);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.16);
+    } catch {}
+  }
+
   public playLanyardGrab() {
     if (!this.soundEnabled) return;
     const ctx = this.getContext();

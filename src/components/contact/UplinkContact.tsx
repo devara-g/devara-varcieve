@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { BIODATA } from "@/data/biodata";
 import { sounds } from "@/lib/soundEffects";
 import { GithubIcon, LinkedinIcon } from "@/components/ui/Icons";
+import { ScrollReveal, StaggerContainer, StaggerItem } from "@/components/ui/ScrollReveal";
 import {
   Send,
   Mail,
@@ -77,120 +78,130 @@ export function UplinkContact() {
   };
 
   return (
-    <section id="contact" className="py-24 relative z-10 border-t border-white/[0.08] scroll-mt-16">
+    <section id="contact" className="py-16 sm:py-24 relative z-10 border-t border-white/[0.08] scroll-mt-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 border-b border-white/[0.08] pb-6">
-          <div>
-            <div className="flex items-center gap-2 text-cyan-400 font-mono text-xs tracking-widest uppercase mb-2">
-              <Radio className="w-4 h-4 text-cyan-400" />
-              <span>SALURAN KOMUNIKASI LANGSUNG</span>
+        <ScrollReveal delay={0.1} distance={20}>
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 sm:mb-12 border-b border-white/[0.08] pb-5 sm:pb-6">
+            <div>
+              <div className="flex items-center gap-2 text-cyan-400 font-mono text-xs tracking-widest uppercase mb-2">
+                <Radio className="w-4 h-4 text-cyan-400" />
+                <span>SALURAN KOMUNIKASI LANGSUNG</span>
+              </div>
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight flex flex-wrap items-center gap-2 sm:gap-3">
+                <span>Hubungi Saya</span>
+                <span className="text-[11px] sm:text-xs font-mono font-semibold px-2.5 py-0.5 rounded-full bg-cyan-950/80 text-cyan-300 border border-cyan-500/30">
+                  Aktif & Terbuka
+                </span>
+              </h2>
             </div>
-            <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight flex items-center gap-3">
-              <span>Hubungi Saya</span>
-              <span className="text-xs font-mono font-semibold px-2.5 py-0.5 rounded-full bg-cyan-950/80 text-cyan-300 border border-cyan-500/30">
-                Aktif & Terbuka
-              </span>
-            </h2>
+            <p className="text-xs sm:text-sm font-mono text-slate-400 max-w-md mt-2.5 md:mt-0">
+              Terbuka untuk lowongan posisi engineering full-time, konsultasi sistem backend, dan kolaborasi proyek berskala besar.
+            </p>
           </div>
-          <p className="text-sm font-mono text-slate-400 max-w-md mt-3 md:mt-0">
-            Terbuka untuk lowongan posisi engineering full-time, konsultasi sistem backend, dan kolaborasi proyek berskala besar.
-          </p>
-        </div>
+        </ScrollReveal>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
           {/* Left Column: Direct Communication Hub (5 cols) */}
-          <div className="lg:col-span-5 space-y-4">
+          <StaggerContainer className="lg:col-span-5 space-y-3.5 sm:space-y-4">
             {/* Operational Clock & Status */}
-            <div className="glass-panel p-5 rounded-2xl border border-white/[0.08] flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-3 h-3 rounded-full bg-emerald-400 animate-ping" />
-                <div>
-                  <span className="text-[10px] font-mono text-slate-400 block uppercase">Status Kerja</span>
-                  <span className="text-xs font-mono font-bold text-emerald-400">SIAP UNTUK BERKOLABORASI</span>
+            <StaggerItem>
+              <div className="glass-panel p-4 sm:p-5 rounded-2xl border border-white/[0.08] flex items-center justify-between">
+                <div className="flex items-center gap-2.5 sm:gap-3">
+                  <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-emerald-400 animate-ping shrink-0" />
+                  <div>
+                    <span className="text-[9px] sm:text-[10px] font-mono text-slate-400 block uppercase">Status Kerja</span>
+                    <span className="text-[11px] sm:text-xs font-mono font-bold text-emerald-400">SIAP UNTUK BERKOLABORASI</span>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <span className="text-[9px] sm:text-[10px] font-mono text-slate-400 block uppercase">Waktu Lokal</span>
+                  <span className="text-[11px] sm:text-xs font-mono font-bold text-white">{currentTimeStr}</span>
                 </div>
               </div>
-              <div className="text-right">
-                <span className="text-[10px] font-mono text-slate-400 block uppercase">Waktu Lokal</span>
-                <span className="text-xs font-mono font-bold text-white">{currentTimeStr}</span>
-              </div>
-            </div>
+            </StaggerItem>
 
             {/* Email Card */}
-            <div className="glass-panel p-5 rounded-2xl border border-white/[0.08] space-y-3">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2.5 text-xs font-mono text-slate-400">
-                  <Mail className="w-4 h-4 text-cyan-400" />
-                  <span>EMAIL UTAMA</span>
+            <StaggerItem>
+              <div className="glass-panel p-5 rounded-2xl border border-white/[0.08] space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2.5 text-xs font-mono text-slate-400">
+                    <Mail className="w-4 h-4 text-cyan-400" />
+                    <span>EMAIL UTAMA</span>
+                  </div>
+                  <button
+                    onClick={() => copyToClipboard(BIODATA.email, "email")}
+                    className="px-2.5 py-1 rounded-lg bg-black/40 hover:bg-black/80 border border-white/[0.08] text-[11px] font-mono text-slate-300 hover:text-white transition-colors flex items-center gap-1"
+                  >
+                    {copiedField === "email" ? (
+                      <>
+                        <Check className="w-3 h-3 text-emerald-400" />
+                        <span className="text-emerald-400 font-bold">Tersalin</span>
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="w-3.5 h-3.5" />
+                        <span>Salin</span>
+                      </>
+                    )}
+                  </button>
                 </div>
-                <button
-                  onClick={() => copyToClipboard(BIODATA.email, "email")}
-                  className="px-2.5 py-1 rounded-lg bg-black/40 hover:bg-black/80 border border-white/[0.08] text-[11px] font-mono text-slate-300 hover:text-white transition-colors flex items-center gap-1"
+                <a
+                  href={`mailto:${BIODATA.email}`}
+                  className="text-base font-mono font-bold text-white hover:text-cyan-300 transition-colors block truncate"
                 >
-                  {copiedField === "email" ? (
-                    <>
-                      <Check className="w-3 h-3 text-emerald-400" />
-                      <span className="text-emerald-400 font-bold">Tersalin</span>
-                    </>
-                  ) : (
-                    <>
-                      <Copy className="w-3.5 h-3.5" />
-                      <span>Salin</span>
-                    </>
-                  )}
-                </button>
+                  {BIODATA.email}
+                </a>
               </div>
-              <a
-                href={`mailto:${BIODATA.email}`}
-                className="text-base font-mono font-bold text-white hover:text-cyan-300 transition-colors block truncate"
-              >
-                {BIODATA.email}
-              </a>
-            </div>
+            </StaggerItem>
 
             {/* GitHub Card */}
-            <div className="glass-panel p-5 rounded-2xl border border-white/[0.08] space-y-3">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2.5 text-xs font-mono text-slate-400">
-                  <GithubIcon className="w-4 h-4 text-slate-200" />
-                  <span>PROFIL GITHUB</span>
+            <StaggerItem>
+              <div className="glass-panel p-5 rounded-2xl border border-white/[0.08] space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2.5 text-xs font-mono text-slate-400">
+                    <GithubIcon className="w-4 h-4 text-slate-200" />
+                    <span>PROFIL GITHUB</span>
+                  </div>
+                  <a
+                    href={BIODATA.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-2.5 py-1 rounded-lg bg-black/40 hover:bg-black/80 border border-white/[0.08] text-[11px] font-mono text-cyan-400 hover:text-cyan-300 transition-colors flex items-center gap-1"
+                  >
+                    <span>Buka Profil</span>
+                    <ChevronRight className="w-3 h-3" />
+                  </a>
                 </div>
-                <a
-                  href={BIODATA.github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-2.5 py-1 rounded-lg bg-black/40 hover:bg-black/80 border border-white/[0.08] text-[11px] font-mono text-cyan-400 hover:text-cyan-300 transition-colors flex items-center gap-1"
-                >
-                  <span>Buka Profil</span>
-                  <ChevronRight className="w-3 h-3" />
-                </a>
+                <span className="text-sm font-mono font-bold text-white block">github.com/devara-g</span>
               </div>
-              <span className="text-sm font-mono font-bold text-white block">github.com/devara-g</span>
-            </div>
+            </StaggerItem>
 
             {/* LinkedIn Card */}
-            <div className="glass-panel p-5 rounded-2xl border border-white/[0.08] space-y-3">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2.5 text-xs font-mono text-slate-400">
-                  <LinkedinIcon className="w-4 h-4 text-cyan-400" />
-                  <span>JARINGAN LINKEDIN</span>
+            <StaggerItem>
+              <div className="glass-panel p-5 rounded-2xl border border-white/[0.08] space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2.5 text-xs font-mono text-slate-400">
+                    <LinkedinIcon className="w-4 h-4 text-cyan-400" />
+                    <span>JARINGAN LINKEDIN</span>
+                  </div>
+                  <a
+                    href={BIODATA.linkedin}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-2.5 py-1 rounded-lg bg-black/40 hover:bg-black/80 border border-white/[0.08] text-[11px] font-mono text-cyan-400 hover:text-cyan-300 transition-colors flex items-center gap-1"
+                  >
+                    <span>Terhubung</span>
+                    <ChevronRight className="w-3 h-3" />
+                  </a>
                 </div>
-                <a
-                  href={BIODATA.linkedin}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-2.5 py-1 rounded-lg bg-black/40 hover:bg-black/80 border border-white/[0.08] text-[11px] font-mono text-cyan-400 hover:text-cyan-300 transition-colors flex items-center gap-1"
-                >
-                  <span>Terhubung</span>
-                  <ChevronRight className="w-3 h-3" />
-                </a>
+                <span className="text-sm font-mono font-bold text-white block">linkedin.com/in/devara</span>
               </div>
-              <span className="text-sm font-mono font-bold text-white block">linkedin.com/in/devara</span>
-            </div>
-          </div>
+            </StaggerItem>
+          </StaggerContainer>
 
           {/* Right Column: Transmission Form (7 cols) */}
-          <div className="lg:col-span-7">
+          <ScrollReveal delay={0.2} distance={24} className="lg:col-span-7">
             <div className="glass-panel p-6 sm:p-8 rounded-3xl border border-white/[0.08] space-y-6">
               <div className="flex items-center justify-between border-b border-white/[0.08] pb-4">
                 <div className="flex items-center gap-2.5">
@@ -293,7 +304,7 @@ export function UplinkContact() {
                 </form>
               )}
             </div>
-          </div>
+          </ScrollReveal>
         </div>
       </div>
     </section>

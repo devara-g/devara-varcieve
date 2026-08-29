@@ -5,6 +5,7 @@ import Image from "next/image";
 import { BIODATA, TechSkill } from "@/data/biodata";
 import { sounds } from "@/lib/soundEffects";
 import { Cpu, Search, Layers, ShieldCheck, Zap } from "lucide-react";
+import { ScrollReveal, StaggerContainer, StaggerItem } from "@/components/ui/ScrollReveal";
 
 function TechBrandIcon({ name, icon }: { name: string; icon?: string }) {
   const n = name.toLowerCase();
@@ -58,109 +59,112 @@ export function TechArsenal() {
   });
 
   return (
-    <section id="stack" className="py-24 relative z-10 border-t border-white/[0.08] scroll-mt-16">
+    <section id="stack" className="py-16 sm:py-24 relative z-10 border-t border-white/[0.08] scroll-mt-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 border-b border-white/[0.08] pb-6">
-          <div>
-            <div className="flex items-center gap-2 text-cyan-400 font-mono text-xs tracking-widest uppercase mb-2">
-              <Cpu className="w-4 h-4" />
-              <span>KEAHLIAN TEKNIS & ARSENAL PERANGKAT</span>
+        <ScrollReveal delay={0.1} distance={20}>
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 sm:mb-10 border-b border-white/[0.08] pb-5 sm:pb-6">
+            <div>
+              <div className="flex items-center gap-2 text-cyan-400 font-mono text-xs tracking-widest uppercase mb-2">
+                <Cpu className="w-4 h-4" />
+                <span>KEAHLIAN TEKNIS & ARSENAL PERANGKAT</span>
+              </div>
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight flex flex-wrap items-center gap-2 sm:gap-3">
+                <span>Stack & Tooling</span>
+                <span className="text-[11px] sm:text-xs font-mono font-semibold px-2.5 py-0.5 rounded-full bg-cyan-950/80 text-cyan-300 border border-cyan-500/30">
+                  Teruji di Lingkungan Produksi
+                </span>
+              </h2>
             </div>
-            <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight flex items-center gap-3">
-              <span>Stack & Tooling</span>
-              <span className="text-xs font-mono font-semibold px-2.5 py-0.5 rounded-full bg-cyan-950/80 text-cyan-300 border border-cyan-500/30">
-                Teruji di Lingkungan Produksi
-              </span>
-            </h2>
+            <p className="text-xs sm:text-sm font-mono text-slate-400 max-w-md mt-2.5 md:mt-0">
+              Teknologi runtime terverifikasi, engine database relasional, layer caching, dan infrastruktur container.
+            </p>
           </div>
-          <p className="text-sm font-mono text-slate-400 max-w-md mt-3 md:mt-0">
-            Teknologi runtime terverifikasi, engine database relasional, layer caching, dan infrastruktur container.
-          </p>
-        </div>
+        </ScrollReveal>
 
         {/* Filter and Search Bar */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-8 glass-panel p-4 rounded-2xl border border-white/[0.08]">
-          <div className="flex flex-wrap items-center gap-2">
-            {categories.map((cat) => (
-              <button
-                key={cat}
-                onClick={() => {
-                  sounds.playClick();
-                  setSelectedCategory(cat);
-                }}
-                className={`px-3.5 py-2 rounded-xl text-xs font-mono font-semibold transition-all border ${
-                  selectedCategory === cat
-                    ? "bg-cyan-500 text-slate-950 border-cyan-400 font-bold shadow-[0_0_12px_rgba(6,182,212,0.3)]"
-                    : "bg-slate-900 border-white/[0.08] text-slate-300 hover:text-white"
-                }`}
-              >
-                {cat}
-              </button>
-            ))}
-          </div>
+        <ScrollReveal delay={0.15} distance={15}>
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3.5 sm:gap-4 mb-6 sm:mb-8 glass-panel p-3.5 sm:p-4 rounded-2xl border border-white/[0.08]">
+            <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 w-full sm:w-auto">
+              {categories.map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => {
+                    sounds.playClick();
+                    setSelectedCategory(cat);
+                  }}
+                  className={`px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-xl text-[11px] sm:text-xs font-mono font-semibold transition-all border ${
+                    selectedCategory === cat
+                      ? "bg-cyan-500 text-slate-950 border-cyan-400 font-bold shadow-[0_0_12px_rgba(6,182,212,0.3)]"
+                      : "bg-slate-900 border-white/[0.08] text-slate-300 hover:text-white"
+                  }`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
 
-          <div className="relative w-full sm:w-64">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400" />
-            <input
-              type="text"
-              placeholder="Cari keahlian atau modul..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-3 py-2 bg-black/60 border border-white/[0.08] rounded-xl text-xs font-mono text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400"
-            />
+            <div className="relative w-full sm:w-64">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400" />
+              <input
+                type="text"
+                placeholder="Cari keahlian atau modul..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-9 pr-3 py-2 bg-black/60 border border-white/[0.08] rounded-xl text-xs font-mono text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400"
+              />
+            </div>
           </div>
-        </div>
+        </ScrollReveal>
 
         {/* Skills Bento Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredSkills.map((skill) => (
-            <div
-              key={skill.name}
-              className="glass-panel-interactive p-6 rounded-3xl border border-white/[0.08] flex flex-col justify-between space-y-4"
-            >
-              <div>
-                {/* Header with Icon & Proficiency Badge */}
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-2xl bg-black/50 border border-white/[0.08] flex items-center justify-center shadow-inner">
-                      <TechBrandIcon name={skill.name} icon={skill.icon} />
+            <StaggerItem key={skill.name}>
+              <div className="h-full glass-panel-interactive p-6 rounded-3xl border border-white/[0.08] flex flex-col justify-between space-y-4">
+                <div>
+                  {/* Header with Icon & Proficiency Badge */}
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="w-12 h-12 rounded-2xl bg-black/50 border border-white/[0.08] flex items-center justify-center shadow-inner">
+                        <TechBrandIcon name={skill.name} icon={skill.icon} />
+                      </div>
+                      <div>
+                        <h3 className="text-base font-bold font-mono text-white leading-tight">{skill.name}</h3>
+                        <span className="text-[10px] font-mono text-slate-400 uppercase tracking-wider">
+                          {skill.category}
+                        </span>
+                      </div>
                     </div>
-                    <div>
-                      <h3 className="text-base font-bold font-mono text-white leading-tight">{skill.name}</h3>
-                      <span className="text-[10px] font-mono text-slate-400 uppercase tracking-wider">
-                        {skill.category}
-                      </span>
-                    </div>
+
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-cyan-950/80 text-cyan-300 border border-cyan-500/30 font-semibold">
+                      {skill.level}
+                    </span>
                   </div>
 
-                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-cyan-950/80 text-cyan-300 border border-cyan-500/30 font-semibold">
-                    {skill.level}
-                  </span>
+                  {/* Production Use Case Description */}
+                  <p className="text-xs text-slate-300 mt-4 leading-relaxed font-sans">
+                    {skill.productionUse}
+                  </p>
                 </div>
 
-                {/* Production Use Case Description */}
-                <p className="text-xs text-slate-300 mt-4 leading-relaxed font-sans">
-                  {skill.productionUse}
-                </p>
-              </div>
-
-              {/* Progress Bar */}
-              <div className="space-y-1.5 pt-2 border-t border-white/[0.06]">
-                <div className="flex justify-between text-[10px] font-mono text-slate-400">
-                  <span>Indeks Kemahiran</span>
-                  <span className="text-cyan-300 font-bold">{skill.proficiency}%</span>
-                </div>
-                <div className="w-full h-1.5 bg-black/60 rounded-full overflow-hidden border border-white/[0.04]">
-                  <div
-                    className="h-full bg-gradient-to-r from-cyan-500 to-emerald-400 rounded-full"
-                    style={{ width: `${skill.proficiency}%` }}
-                  />
+                {/* Progress Bar */}
+                <div className="space-y-1.5 pt-2 border-t border-white/[0.06]">
+                  <div className="flex justify-between text-[10px] font-mono text-slate-400">
+                    <span>Indeks Kemahiran</span>
+                    <span className="text-cyan-300 font-bold">{skill.proficiency}%</span>
+                  </div>
+                  <div className="w-full h-1.5 bg-black/60 rounded-full overflow-hidden border border-white/[0.04]">
+                    <div
+                      className="h-full bg-gradient-to-r from-cyan-500 to-emerald-400 rounded-full"
+                      style={{ width: `${skill.proficiency}%` }}
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
+            </StaggerItem>
           ))}
-        </div>
+        </StaggerContainer>
       </div>
     </section>
   );

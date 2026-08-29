@@ -4,6 +4,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { BIODATA } from "@/data/biodata";
 import { sounds } from "@/lib/soundEffects";
 import { Terminal as TerminalIcon, CornerDownLeft, Sparkles, Loader2, Copy, Check } from "lucide-react";
+import { ScrollReveal } from "@/components/ui/ScrollReveal";
 
 interface ChatMessage {
   role: "system" | "user" | "assistant";
@@ -351,92 +352,96 @@ export function InteractiveCLI() {
   };
 
   return (
-    <section id="terminal" className="py-24 relative z-10 border-t border-white/[0.08] scroll-mt-16">
+    <section id="terminal" className="py-16 sm:py-24 relative z-10 border-t border-white/[0.08] scroll-mt-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 border-b border-white/[0.08] pb-6">
-          <div>
-            <div className="flex items-center gap-2 text-cyan-400 font-mono text-xs tracking-widest uppercase mb-2">
-              <TerminalIcon className="w-4 h-4" />
-              <span>SHELL DEVTOOLS INTERAKTIF</span>
+        <ScrollReveal delay={0.1} distance={20}>
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-6 sm:mb-8 border-b border-white/[0.08] pb-5 sm:pb-6">
+            <div>
+              <div className="flex items-center gap-2 text-cyan-400 font-mono text-xs tracking-widest uppercase mb-2">
+                <TerminalIcon className="w-4 h-4" />
+                <span>SHELL DEVTOOLS INTERAKTIF</span>
+              </div>
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight flex flex-wrap items-center gap-2 sm:gap-3">
+                <span>Terminal Engineering</span>
+                <span className="text-[11px] sm:text-xs font-mono font-semibold px-2.5 py-0.5 rounded-full bg-violet-950 text-violet-300 border border-violet-500/30">
+                  Konsol AI & CLI
+                </span>
+              </h2>
             </div>
-            <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight flex items-center gap-3">
-              <span>Terminal Engineering</span>
-              <span className="text-xs font-mono font-semibold px-2.5 py-0.5 rounded-full bg-violet-950 text-violet-300 border border-violet-500/30">
-                Konsol AI & CLI
-              </span>
-            </h2>
+            <p className="text-xs sm:text-sm font-mono text-slate-400 max-w-md mt-2.5 md:mt-0">
+              Terminal interaktif dengan fitur autokomplit, diagnostik sistem, dan asisten AI Groq terintegrasi.
+            </p>
           </div>
-          <p className="text-sm font-mono text-slate-400 max-w-md mt-3 md:mt-0">
-            Terminal interaktif dengan fitur autokomplit, diagnostik sistem, dan asisten AI Groq terintegrasi.
-          </p>
-        </div>
+        </ScrollReveal>
 
         {/* Terminal Window Box */}
-        <div
-          onClick={() => inputRef.current?.focus()}
-          className="w-full rounded-3xl bg-[#090b14] border border-white/[0.1] shadow-2xl overflow-hidden cursor-text"
-        >
-          {/* Header Bar */}
-          <div className="px-5 py-3.5 bg-[#0d101c] border-b border-white/[0.08] flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <div className="flex items-center gap-2">
-                <span className="w-3 h-3 rounded-full bg-rose-500/80" />
-                <span className="w-3 h-3 rounded-full bg-amber-500/80" />
-                <span className="w-3 h-3 rounded-full bg-emerald-500/80" />
-              </div>
-              <span className="text-xs font-mono text-slate-400 ml-3 font-semibold">
-                devara@jkt-edge-node: ~ (zsh)
-              </span>
-            </div>
-
-            {/* Quick Action Hints */}
-            <div className="hidden sm:flex items-center gap-3 text-[11px] font-mono text-slate-500">
-              <span>[Tab] Autocomplete</span>
-              <span>[↑/↓] History</span>
-              <span>Ketik &quot;help&quot;</span>
-            </div>
-          </div>
-
-          {/* Terminal Output Area */}
+        <ScrollReveal delay={0.2} distance={24}>
           <div
-            ref={terminalOutputRef}
-            className="p-6 font-mono text-xs text-slate-200 h-[380px] overflow-y-auto space-y-4 bg-[#070910]"
+            onClick={() => inputRef.current?.focus()}
+            className="w-full rounded-2xl sm:rounded-3xl bg-[#090b14] border border-white/[0.1] shadow-2xl overflow-hidden cursor-text"
           >
-            {logs.map((log) => (
-              <div key={log.id} className="space-y-1.5">
-                <div className="flex items-center gap-2 text-slate-400">
-                  <span className="text-cyan-400 font-bold">➜</span>
-                  <span className="text-emerald-400 font-semibold">devara@arch:~$</span>
-                  <span className="text-white font-medium">{log.command}</span>
+            {/* Header Bar */}
+            <div className="px-3.5 sm:px-5 py-2.5 sm:py-3.5 bg-[#0d101c] border-b border-white/[0.08] flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1.5 sm:gap-2">
+                  <span className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-rose-500/80" />
+                  <span className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-amber-500/80" />
+                  <span className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-emerald-500/80" />
                 </div>
-                <div className="pl-4">{log.output}</div>
+                <span className="text-[11px] sm:text-xs font-mono text-slate-400 ml-1.5 sm:ml-3 font-semibold truncate">
+                  devara@jkt-edge-node: ~
+                </span>
               </div>
-            ))}
-          </div>
 
-          {/* Terminal Input Line */}
-          <div className="px-6 py-4 bg-[#0a0d17] border-t border-white/[0.08] flex items-center gap-3">
-            <span className="text-cyan-400 font-bold">➜</span>
-            <span className="text-emerald-400 font-semibold text-xs font-mono">devara@arch:~$</span>
-            <input
-              ref={inputRef}
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder="Ketik 'help' atau 'ai Bagaimana cara optimasi query database?'"
-              className="flex-1 bg-transparent text-white font-mono text-xs focus:outline-none placeholder-slate-600"
-            />
-            <button
-              onClick={() => handleCommand(input)}
-              className="px-3 py-1 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-slate-950 text-xs font-mono font-bold transition-all flex items-center gap-1"
+              {/* Quick Action Hints */}
+              <div className="hidden sm:flex items-center gap-3 text-[11px] font-mono text-slate-500">
+                <span>[Tab] Autocomplete</span>
+                <span>[↑/↓] History</span>
+                <span>Ketik &quot;help&quot;</span>
+              </div>
+            </div>
+
+            {/* Terminal Output Area */}
+            <div
+              ref={terminalOutputRef}
+              className="p-3.5 sm:p-6 font-mono text-[10.5px] sm:text-xs text-slate-200 h-[280px] sm:h-[380px] overflow-y-auto space-y-3 sm:space-y-4 bg-[#070910]"
             >
-              <span>JALANKAN</span>
-              <CornerDownLeft className="w-3 h-3" />
-            </button>
+              {logs.map((log) => (
+                <div key={log.id} className="space-y-1 sm:space-y-1.5">
+                  <div className="flex items-center gap-1.5 sm:gap-2 text-slate-400">
+                    <span className="text-cyan-400 font-bold">➜</span>
+                    <span className="text-emerald-400 font-semibold">devara@arch:~$</span>
+                    <span className="text-white font-medium">{log.command}</span>
+                  </div>
+                  <div className="pl-3 sm:pl-4">{log.output}</div>
+                </div>
+              ))}
+            </div>
+
+            {/* Terminal Input Line */}
+            <div className="px-3.5 sm:px-6 py-2.5 sm:py-4 bg-[#0a0d17] border-t border-white/[0.08] flex items-center gap-2 sm:gap-3">
+              <span className="text-cyan-400 font-bold">➜</span>
+              <span className="text-emerald-400 font-semibold text-[11px] sm:text-xs font-mono shrink-0">devara:~$</span>
+              <input
+                ref={inputRef}
+                type="text"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder="Ketik 'help' atau 'ai tanya sesuatu...'"
+                className="flex-1 bg-transparent text-white font-mono text-[11px] sm:text-xs focus:outline-none placeholder-slate-600 min-w-0"
+              />
+              <button
+                onClick={() => handleCommand(input)}
+                className="px-2.5 sm:px-3 py-1 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-slate-950 text-[10px] sm:text-xs font-mono font-bold transition-all flex items-center gap-1 shrink-0"
+              >
+                <span>JALANKAN</span>
+                <CornerDownLeft className="w-3 h-3" />
+              </button>
+            </div>
           </div>
-        </div>
+        </ScrollReveal>
       </div>
     </section>
   );
