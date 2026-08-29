@@ -6,6 +6,7 @@ import { BIODATA, ProjectCaseStudy } from "@/data/biodata";
 import { sounds } from "@/lib/soundEffects";
 import { GithubIcon } from "@/components/ui/Icons";
 import { ScrollReveal, StaggerContainer, StaggerItem } from "@/components/ui/ScrollReveal";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   FolderGit2,
   Star,
@@ -277,58 +278,90 @@ export function ProjectsSection() {
               </div>
             </ScrollReveal>
 
-            {/* Repos Grid */}
-            <StaggerContainer className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {filteredRepos.map((repo) => (
-                <StaggerItem key={repo.id}>
-                  <div className="h-full glass-panel p-5 rounded-2xl border border-white/[0.08] hover:border-cyan-500/40 transition-all flex flex-col justify-between space-y-4">
-                    <div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-cyan-950/60 text-cyan-400 border border-cyan-500/20 font-semibold">
-                          {repo.language}
-                        </span>
-                        <div className="flex items-center gap-2 text-xs font-mono text-slate-400">
-                          <span className="flex items-center gap-1">
-                            <Star className="w-3 h-3 text-amber-400" /> {repo.stars}
+            {/* Repos Grid with Animated Filtering */}
+            <motion.div layout className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <AnimatePresence mode="popLayout">
+                {filteredRepos.map((repo) => (
+                  <motion.div
+                    key={repo.id}
+                    layout
+                    initial={{ opacity: 0, scale: 0.92, y: 15 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.92, y: -10 }}
+                    transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                    className="h-full"
+                  >
+                    <div className="h-full glass-panel p-5 rounded-2xl border border-white/[0.08] hover:border-cyan-500/40 transition-all flex flex-col justify-between space-y-4">
+                      <div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-cyan-950/60 text-cyan-400 border border-cyan-500/20 font-semibold">
+                            {repo.language}
                           </span>
-                          <span className="flex items-center gap-1">
-                            <GitFork className="w-3 h-3 text-slate-400" /> {repo.forks}
-                          </span>
+                          <div className="flex items-center gap-2 text-xs font-mono text-slate-400">
+                            <span className="flex items-center gap-1">
+                              <Star className="w-3 h-3 text-amber-400" /> {repo.stars}
+                            </span>
+                            <span className="flex items-center gap-1">
+                              <GitFork className="w-3 h-3 text-slate-400" /> {repo.forks}
+                            </span>
+                          </div>
                         </div>
+
+                        <h4 className="text-sm font-bold font-mono text-white mt-3 leading-tight">{repo.title}</h4>
+                        <p className="text-xs text-slate-400 mt-2 line-clamp-2 leading-relaxed">{repo.description}</p>
                       </div>
 
-                      <h4 className="text-sm font-bold font-mono text-white mt-3 leading-tight">{repo.title}</h4>
-                      <p className="text-xs text-slate-400 mt-2 line-clamp-2 leading-relaxed">{repo.description}</p>
-                    </div>
-
-                    {/* Actions */}
-                    <div className="flex items-center justify-between pt-3 border-t border-white/[0.06]">
-                      <a
-                        href={repo.githubUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-xs font-mono text-slate-300 hover:text-cyan-300 transition-colors flex items-center gap-1.5"
-                      >
-                        <GithubIcon className="w-3.5 h-3.5" />
-                        <span>Source Code</span>
-                      </a>
-
-                      {repo.hasLiveDemo && (
+                      {/* Actions */}
+                      <div className="flex items-center justify-between pt-3 border-t border-white/[0.06]">
                         <a
-                          href={repo.liveUrl}
+                          href={repo.githubUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-xs font-mono text-cyan-400 hover:text-cyan-300 transition-colors flex items-center gap-1"
+                          className="text-xs font-mono text-slate-300 hover:text-cyan-300 transition-colors flex items-center gap-1.5"
                         >
-                          <span>Live Demo</span>
-                          <ExternalLink className="w-3 h-3" />
+                          <GithubIcon className="w-3.5 h-3.5" />
+                          <span>Source Code</span>
                         </a>
-                      )}
+
+                        {repo.hasLiveDemo && (
+                          <a
+                            href={repo.liveUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-xs font-mono text-cyan-400 hover:text-cyan-300 transition-colors flex items-center gap-1"
+                          >
+                            <span>Live Demo</span>
+                            <ExternalLink className="w-3 h-3" />
+                          </a>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                </StaggerItem>
-              ))}
-            </StaggerContainer>
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+            </motion.div>
+
+            {/* Empty State */}
+            {filteredRepos.length === 0 && (
+              <motion.div
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="py-12 text-center glass-panel rounded-2xl border border-white/[0.08] mt-4"
+              >
+                <p className="text-xs font-mono text-slate-400">
+                  Tidak ada repositori yang cocok dengan filter atau kata kunci &quot;{searchQuery}&quot;.
+                </p>
+                <button
+                  onClick={() => {
+                    setSelectedLanguage("SEMUA");
+                    setSearchQuery("");
+                  }}
+                  className="mt-3 px-3.5 py-1.5 rounded-xl bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 border border-cyan-500/40 text-xs font-mono font-semibold transition-all"
+                >
+                  Reset Filter & Pencarian
+                </button>
+              </motion.div>
+            )}
           </div>
         )}
 

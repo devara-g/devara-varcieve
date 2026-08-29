@@ -28,7 +28,6 @@ document.addEventListener("DOMContentLoaded", function () {
   // ========================================
   const playlist = [
     { name: "Love Me Not — Ravyn Lenae", src: "assets/lovemenot.mp3" },
-    { name: "The Man Who Can't Be Moved — The Script", src: "assets/moveon.mp3" },
     { name: "Tante — Unknown", src: "assets/tante.mp3" },
   ];
   let currentTrack = 0;

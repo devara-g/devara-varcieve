@@ -16,13 +16,6 @@ export const PLAYLIST: Song[] = [
     genre: "R&B / Soul / Synth",
   },
   {
-    id: "moveon",
-    title: "The Man Who Can't Be Moved",
-    artist: "The Script",
-    src: "/assets/moveon.mp3",
-    genre: "Pop Rock / Nostalgia",
-  },
-  {
     id: "tante",
     title: "Tante",
     artist: "Indonesian Classic / Remix",

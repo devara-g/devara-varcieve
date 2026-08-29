@@ -4,8 +4,9 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { BIODATA, TechSkill } from "@/data/biodata";
 import { sounds } from "@/lib/soundEffects";
-import { Cpu, Search, Layers, ShieldCheck, Zap } from "lucide-react";
-import { ScrollReveal, StaggerContainer, StaggerItem } from "@/components/ui/ScrollReveal";
+import { Cpu, Search } from "lucide-react";
+import { ScrollReveal } from "@/components/ui/ScrollReveal";
+import { motion, AnimatePresence } from "framer-motion";
 
 function TechBrandIcon({ name, icon }: { name: string; icon?: string }) {
   const n = name.toLowerCase();
@@ -117,54 +118,86 @@ export function TechArsenal() {
           </div>
         </ScrollReveal>
 
-        {/* Skills Bento Grid */}
-        <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredSkills.map((skill) => (
-            <StaggerItem key={skill.name}>
-              <div className="h-full glass-panel-interactive p-6 rounded-3xl border border-white/[0.08] flex flex-col justify-between space-y-4">
-                <div>
-                  {/* Header with Icon & Proficiency Badge */}
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 rounded-2xl bg-black/50 border border-white/[0.08] flex items-center justify-center shadow-inner">
-                        <TechBrandIcon name={skill.name} icon={skill.icon} />
+        {/* Skills Bento Grid with Animated Filtering */}
+        <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <AnimatePresence mode="popLayout">
+            {filteredSkills.map((skill) => (
+              <motion.div
+                key={skill.name}
+                layout
+                initial={{ opacity: 0, scale: 0.92, y: 15 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.92, y: -10 }}
+                transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                className="h-full"
+              >
+                <div className="h-full glass-panel-interactive p-6 rounded-3xl border border-white/[0.08] flex flex-col justify-between space-y-4">
+                  <div>
+                    {/* Header with Icon & Proficiency Badge */}
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="w-12 h-12 rounded-2xl bg-black/50 border border-white/[0.08] flex items-center justify-center shadow-inner">
+                          <TechBrandIcon name={skill.name} icon={skill.icon} />
+                        </div>
+                        <div>
+                          <h3 className="text-base font-bold font-mono text-white leading-tight">{skill.name}</h3>
+                          <span className="text-[10px] font-mono text-slate-400 uppercase tracking-wider">
+                            {skill.category}
+                          </span>
+                        </div>
                       </div>
-                      <div>
-                        <h3 className="text-base font-bold font-mono text-white leading-tight">{skill.name}</h3>
-                        <span className="text-[10px] font-mono text-slate-400 uppercase tracking-wider">
-                          {skill.category}
-                        </span>
-                      </div>
+
+                      <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-cyan-950/80 text-cyan-300 border border-cyan-500/30 font-semibold">
+                        {skill.level}
+                      </span>
                     </div>
 
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-cyan-950/80 text-cyan-300 border border-cyan-500/30 font-semibold">
-                      {skill.level}
-                    </span>
+                    {/* Production Use Case Description */}
+                    <p className="text-xs text-slate-300 mt-4 leading-relaxed font-sans">
+                      {skill.productionUse}
+                    </p>
                   </div>
 
-                  {/* Production Use Case Description */}
-                  <p className="text-xs text-slate-300 mt-4 leading-relaxed font-sans">
-                    {skill.productionUse}
-                  </p>
+                  {/* Progress Bar */}
+                  <div className="space-y-1.5 pt-2 border-t border-white/[0.06]">
+                    <div className="flex justify-between text-[10px] font-mono text-slate-400">
+                      <span>Indeks Kemahiran</span>
+                      <span className="text-cyan-300 font-bold">{skill.proficiency}%</span>
+                    </div>
+                    <div className="w-full h-1.5 bg-black/60 rounded-full overflow-hidden border border-white/[0.04]">
+                      <div
+                        className="h-full bg-gradient-to-r from-cyan-500 to-emerald-400 rounded-full"
+                        style={{ width: `${skill.proficiency}%` }}
+                      />
+                    </div>
+                  </div>
                 </div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </motion.div>
 
-                {/* Progress Bar */}
-                <div className="space-y-1.5 pt-2 border-t border-white/[0.06]">
-                  <div className="flex justify-between text-[10px] font-mono text-slate-400">
-                    <span>Indeks Kemahiran</span>
-                    <span className="text-cyan-300 font-bold">{skill.proficiency}%</span>
-                  </div>
-                  <div className="w-full h-1.5 bg-black/60 rounded-full overflow-hidden border border-white/[0.04]">
-                    <div
-                      className="h-full bg-gradient-to-r from-cyan-500 to-emerald-400 rounded-full"
-                      style={{ width: `${skill.proficiency}%` }}
-                    />
-                  </div>
-                </div>
-              </div>
-            </StaggerItem>
-          ))}
-        </StaggerContainer>
+        {/* Empty State */}
+        {filteredSkills.length === 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="py-12 text-center glass-panel rounded-3xl border border-white/[0.08] mt-6"
+          >
+            <p className="text-sm font-mono text-slate-400">
+              Tidak ada keahlian yang cocok dengan pencarian Anda.
+            </p>
+            <button
+              onClick={() => {
+                setSelectedCategory("SEMUA");
+                setSearchQuery("");
+              }}
+              className="mt-4 px-4 py-2 rounded-xl bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 border border-cyan-500/40 text-xs font-mono font-bold transition-all"
+            >
+              Reset Filter & Pencarian
+            </button>
+          </motion.div>
+        )}
       </div>
     </section>
   );
