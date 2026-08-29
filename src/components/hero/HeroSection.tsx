@@ -116,8 +116,8 @@ export function HeroSection() {
                   onClick={() => sounds.playClick()}
                   className="px-3.5 sm:px-4 py-2.5 rounded-xl bg-slate-900/80 hover:bg-slate-800 border border-white/[0.08] text-slate-300 font-mono text-xs font-semibold transition-all flex items-center gap-1.5"
                 >
-                  <Send className="w-3.5 h-3.5 text-slate-400" />
-                  <span>KONTAK</span>
+                  <Send className="w-3.5 h-3.5 text-cyan-400" />
+                  <span>FEEDBACK</span>
                 </a>
               </div>
             </ScrollReveal>

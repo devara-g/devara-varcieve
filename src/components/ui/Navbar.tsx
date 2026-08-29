@@ -50,7 +50,7 @@ export function Navbar({ onOpenCommandPalette }: NavbarProps) {
     { label: "KEAHLIAN", href: "#stack" },
     { label: "TENTANG", href: "#about" },
     { label: "TERMINAL", href: "#terminal" },
-    { label: "KONTAK", href: "#contact" },
+    { label: "FEEDBACK", href: "#contact" },
   ];
 
   return (

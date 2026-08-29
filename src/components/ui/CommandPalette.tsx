@@ -105,7 +105,7 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
     },
     {
       id: "contact",
-      title: "Kirim Pesan Kontak Langsung",
+      title: "Kirim Feedback & Transmisi Langsung",
       category: "Aksi",
       icon: Mail,
       action: () => {

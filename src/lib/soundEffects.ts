@@ -198,6 +198,10 @@ class SoundManager {
       osc.stop(now + 0.1);
     } catch {}
   }
+
+  public playError() {
+    this.playGlitch();
+  }
 }
 
 export const sounds = new SoundManager();
